@@ -4,9 +4,15 @@ CXXFLAGS = -std=c++11 -O3 -Wall
 
 INCLUDE = -I $(CURDIR)/include
 
-all: build/scanner.o
+all: scanner_demo.out
+
+scanner_demo.out: build/scanner.o build/scanner_demo.o
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
 build/%.o: src/%.cpp include/%.hpp
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+build/scanner_demo.o: src/scanner_demo.cpp include/scanner.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
