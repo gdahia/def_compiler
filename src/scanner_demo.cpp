@@ -7,5 +7,4 @@ int main(int argc, char ** argv) {
         return 1;
     }
     lex::Scanner scanner(argv[1]);
-    scanner.test_next_word();
 }

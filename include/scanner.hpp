@@ -4,21 +4,24 @@
 #include <fstream>
 #include <string>
 #include <utility>
-#include <set>
-#include <map>
+#include <unordered_map>
 
 namespace lex {
-    enum Token {ID, DECIMAL, KEY, SYM, ERROR};
+    enum Token {ID = 0x0, DECIMAL = 0x2, KEY = 0x3, SYM = 0x4, ERROR = 0x5};
 
     class Scanner {
     private:
-        std::map<char, bool> is_symbol = {{'(', true}, {'{', true}, {'[', true}, {']', true}, {'}', true}, {')', true}, {',', true}, {';', true}, {'=', true}, {'+', true}, {'-', true}, {'*', true}, {'/', true}, {'<', true}, {'>', true}, {'&', true}, {'|', true}, {'!', true}};
-        std::map<char, char> followup= {{'=', '='}, {'<', '='}, {'>', '='}, {'!', '='}, {'&', '&'}, {'|', '|'}};
         std::ifstream src_file;
-        std::string buffer;
-        std::string::iterator lookup;
-
-        std::string next_word();
+        bool eof;
+        char looked_up;
+        std::unordered_map<std::string, Token> word_filter = {{"def", KEY}, {"if", KEY}, {"else", KEY}, {"main", KEY}, {"break", KEY}, {"continue", KEY}, {"return", KEY}, {"int", KEY}};
+        
+        char lookup();
+        void pop_lookup();
+        bool is_alphanumerical(const char) const;
+        bool is_alphabetical(const char) const;
+        bool is_numeral(const char) const;
+        bool is_whitespace(const char) const;
 
     public:
         Scanner(const std::string &);
@@ -27,7 +30,7 @@ namespace lex {
         Scanner(Scanner &&) = delete;
         Scanner operator = (const Scanner &) = delete;
 
-        void test_next_word();
+        std::pair<Token, std::string> next_token();
     };
 }
 
