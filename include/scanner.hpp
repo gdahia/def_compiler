@@ -36,8 +36,7 @@ namespace lex {
         std::ifstream src_file;
         std::unordered_map<std::string, Token::Type> word_filter = {{"def", Token::Type::KEY}, {"if", Token::Type::KEY}, {"else", Token::Type::KEY}, {"main", Token::Type::KEY}, {"break", Token::Type::KEY}, {"continue", Token::Type::KEY}, {"return", Token::Type::KEY}, {"int", Token::Type::KEY}};
         
-        char lookup();
-        void pop_lookup();
+        void discard_whitespaces();
         bool is_alphanumerical(const char) const;
         bool is_alphabetical(const char) const;
         bool is_numeral(const char) const;

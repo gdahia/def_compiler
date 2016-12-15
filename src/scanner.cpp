@@ -26,11 +26,17 @@ bool Scanner::is_whitespace(const char c) const {
     return c == ' ' || c == '\t' || c == '\n';
 }
 
+void Scanner::discard_whitespaces() {
+    while (src_file.peek() != EOF && is_whitespace(src_file.peek()))
+        src_file.get();
+}
+
 Token Scanner::next_token() {
-    // todo: treat calls for this function with no more tokens
     std::string ret;
+
+    discard_whitespaces();
     
-    // todo: discard comments and whitespace here
+    // todo: throw error on no more tokens
     
     // get current char
     ret += static_cast<char>(src_file.get());
