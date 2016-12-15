@@ -16,8 +16,7 @@ char Scanner::lookup() {
 }
 
 void Scanner::pop_lookup() {
-    // todo: see if .read() is faster than >>
-    eof = (!(src_file >> std::noskipws >> looked_up));
+    eof = !src_file.get(looked_up);
 }
 
 bool Scanner::is_alphanumerical(const char c) const {
