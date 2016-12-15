@@ -11,7 +11,7 @@ namespace lex {
     struct Token {
         enum Type {ID = 0x0, DECIMAL = 0x2, KEY = 0x3, SYM = 0x4, ERROR = 0x5};
     
-        Token(Type type, const std::string & text) : text(text), type(type) {}
+        Token(Type type, const std::string & lexeme) : lexeme(lexeme), type(type) {}
         ~Token() {}
         
         friend std::ostream & operator << (std::ostream & os, const Token & t) {
@@ -22,11 +22,11 @@ namespace lex {
                 case SYM: os << "SYM\t"; break;
                 case ERROR: os << "ERROR\t"; break;
             }
-            os << '\"' << t.text << '\"';
+            os << '\"' << t.lexeme << '\"';
             return os;
         }
 
-        std::string text;
+        std::string lexeme;
         Type type;
     };
     
