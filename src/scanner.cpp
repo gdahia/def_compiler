@@ -6,17 +6,8 @@ using namespace lex;
 Scanner::Scanner(const std::string & src_file_path) : src_file(src_file_path, std::ios::in) {
     if (!src_file.is_open())
         throw std::runtime_error("Error: unable to open source file");
-    eof = false;
-    while (!eof)
-        std::cout << next_token().second << std::endl;
-}
-
-char Scanner::lookup() {
-    return (eof ? -1 : looked_up);
-}
-
-void Scanner::pop_lookup() {
-    eof = !src_file.get(looked_up);
+    while (src_file.peek() != EOF)
+        std::cout << next_token() << std::endl;
 }
 
 bool Scanner::is_alphanumerical(const char c) const {
@@ -35,32 +26,36 @@ bool Scanner::is_whitespace(const char c) const {
     return c == ' ' || c == '\t' || c == '\n';
 }
 
-std::pair<Token, std::string> Scanner::next_token() {
+Token Scanner::next_token() {
+    // todo: treat calls for this function with no more tokens
     std::string ret;
     
     // todo: discard comments and whitespace here
     
     // get current char
-    ret += lookup();
-    pop_lookup();
+    ret += static_cast<char>(src_file.get());
     
-    // determine first char's nature
+    // if first char is alphanumerical, then token type is either ID or KEY
     if (is_alphabetical(ret[0])) {
-        while (is_alphanumerical(lookup())) {
-            ret += lookup();
-            pop_lookup();
-        }
-        return std::make_pair(word_filter[ret], ret);
+        // get chars while they are alphanumerical
+        while (is_alphanumerical(src_file.peek()))
+            ret += static_cast<char>(src_file.get());
+
+        // match token type in hash table
+        return Token(word_filter[ret], ret);
     }
+    // if first char is numeral, then token type is NUM
     else if (is_numeral(ret[0])) {
-        while (is_numeral(lookup())) {
-            ret += lookup();
-            pop_lookup();
-        }
-        return std::make_pair(DECIMAL, ret);
+        // get chars while they are numerals
+        while (is_numeral(src_file.peek()))
+            ret += static_cast<char>(src_file.get());
+
+        return Token(Token::Type::DECIMAL, ret);
     }
+    // if neither above, first char is either SYM or ERROR
     else {
         switch (ret[0]) {
+            // match single symbol only SYMs
             case '+':
             case '-':
             case '*':
@@ -73,28 +68,29 @@ std::pair<Token, std::string> Scanner::next_token() {
             case ']':
             case '{':
             case '}':
-                return std::make_pair(SYM, ret);
+                return Token(Token::Type::SYM, ret);
 
+            // match logical SYMs
             case '&':
             case '|':
-                if (ret[0] == lookup()) {
-                    pop_lookup();
-                    ret += ret[0];
-                    return std::make_pair(SYM, ret);
+                if (ret[0] == src_file.peek()) {
+                    ret += static_cast<char>(src_file.get());
+                    return Token(Token::Type::SYM, ret);
                 }
                 break;
 
+            // match remainder of math SYMs
             case '=':
             case '<':
             case '>':
             case '!':
-                if (lookup() == '=') {
-                    pop_lookup();
-                    ret += '=';
-                }
-                return std::make_pair(SYM, ret);
+                // check if they are followed by '='
+                if (src_file.peek() == '=')
+                    ret += static_cast<char>(src_file.get());
+
+                return Token(Token::Type::SYM, ret);
         }
     }
     
-    return std::make_pair(ERROR, ret);
+    return Token(Token::Type::ERROR, ret);
 }
