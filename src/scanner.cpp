@@ -59,11 +59,19 @@ Token Scanner::next_token() {
     else {
         // if neither above, first char is either SYM or ERROR
         switch (ret[0]) {
+            // match slash and eventually comments
+            case '/':
+                if (src_file.peek() == '/') {
+                    ret += static_cast<char>(src_file.get());
+                    // discard whole comment
+                    while (src_file.peek() != EOF && src_file.peek() != '\n')
+                        ret += static_cast<char>(src_file.get());
+                    return Token(Token::Type::COMMENT, ret);
+                }
             // match single symbol only SYMs
             case '+':
             case '-':
             case '*':
-            case '/':
             case ',':
             case ';':
             case '(':
@@ -103,7 +111,7 @@ std::vector<Token> Scanner::get_all_tokens() {
     std::vector<Token> ret;
     while (src_file.peek() != EOF) {
         Token next = next_token();
-        if (next.type != Token::Type::EoF)
+        if (next.type != Token::Type::EoF && next.type != Token::Type::COMMENT)
             ret.push_back(next);
     }
     return ret;
