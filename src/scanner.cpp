@@ -1,13 +1,10 @@
 #include <scanner.hpp>
-#include <iostream>
 
 using namespace lex;
 
 Scanner::Scanner(const std::string & src_file_path) : src_file(src_file_path, std::ios::in) {
     if (!src_file.is_open())
         throw std::runtime_error("Error: unable to open source file");
-    while (src_file.peek() != EOF)
-        std::cout << next_token() << std::endl;
 }
 
 bool Scanner::is_alphanumerical(const char c) const {
@@ -42,8 +39,8 @@ Token Scanner::next_token() {
     std::string ret;
     ret += static_cast<char>(src_file.get());
     
-    // if first char is alphanumerical, then token type is either ID or KEY
     if (is_alphabetical(ret[0])) {
+        // if first char is alphanumerical, then token type is either ID or KEY
         // get chars while they are alphanumerical
         while (is_alphanumerical(src_file.peek()))
             ret += static_cast<char>(src_file.get());
@@ -51,16 +48,16 @@ Token Scanner::next_token() {
         // match token type in hash table
         return Token(word_filter[ret], ret);
     }
-    // if first char is numeral, then token type is NUM
     else if (is_numeral(ret[0])) {
+        // if first char is numeral, then token type is NUM
         // get chars while they are numerals
         while (is_numeral(src_file.peek()))
             ret += static_cast<char>(src_file.get());
 
         return Token(Token::Type::DECIMAL, ret);
     }
-    // if neither above, first char is either SYM or ERROR
     else {
+        // if neither above, first char is either SYM or ERROR
         switch (ret[0]) {
             // match single symbol only SYMs
             case '+':
@@ -100,4 +97,14 @@ Token Scanner::next_token() {
     }
     
     return Token(Token::Type::ERROR, ret);
+}
+
+std::vector<Token> Scanner::get_all_tokens() {
+    std::vector<Token> ret;
+    while (src_file.peek() != EOF) {
+        Token next = next_token();
+        if (next.type != Token::Type::EoF)
+            ret.push_back(next);
+    }
+    return ret;
 }

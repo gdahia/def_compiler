@@ -3,7 +3,7 @@
 
 #include <fstream>
 #include <string>
-#include <utility>
+#include <vector>
 #include <unordered_map>
 
 namespace lex {
@@ -51,6 +51,7 @@ namespace lex {
         Scanner operator = (const Scanner &) = delete;
 
         Token next_token();
+        std::vector<Token> get_all_tokens();
     };
 }
 
