@@ -9,7 +9,7 @@
 namespace lex {
     // maybedo: separate Token into new file?
     struct Token {
-        enum Type {ID = 0x0, DECIMAL = 0x2, KEY = 0x3, SYM = 0x4, ERROR = 0x5};
+        enum Type {ID = 0x0, DECIMAL = 0x2, KEY = 0x3, SYM = 0x4, ERROR = 0x5, EoF = 0x6};
     
         Token(Type type, const std::string & lexeme) : lexeme(lexeme), type(type) {}
         ~Token() {}
@@ -21,6 +21,7 @@ namespace lex {
                 case KEY: os << "KEY\t"; break;
                 case SYM: os << "SYM\t"; break;
                 case ERROR: os << "ERROR\t"; break;
+                default: return os;
             }
             os << '\"' << t.lexeme << '\"';
             return os;

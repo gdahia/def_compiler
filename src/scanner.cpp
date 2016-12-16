@@ -32,13 +32,14 @@ void Scanner::discard_whitespaces() {
 }
 
 Token Scanner::next_token() {
-    std::string ret;
-
     discard_whitespaces();
     
-    // todo: throw error on no more tokens
+    // no more tokens filter
+    if (src_file.peek() == EOF)
+        return Token(Token::Type::EoF, "");
     
     // get current char
+    std::string ret;
     ret += static_cast<char>(src_file.get());
     
     // if first char is alphanumerical, then token type is either ID or KEY
