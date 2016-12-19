@@ -9,10 +9,13 @@ all: scanner_demo.out
 scanner_demo.out: build/scanner.o build/scanner_demo.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
+build/scanner.o: src/scanner.cpp include/lex.hpp
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
 build/%.o: src/%.cpp include/%.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
-build/scanner_demo.o: src/scanner_demo.cpp include/scanner.hpp
+build/scanner_demo.o: src/scanner_demo.cpp include/lex.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:

@@ -7,7 +7,6 @@
 #include <unordered_map>
 
 namespace lex {
-    // maybedo: separate Token into new file?
     struct Token {
         enum Type {ID = 0x0, DECIMAL = 0x2, KEY = 0x3, SYM = 0x4, COMMENT = 0x5, ERROR = 0x6, EoF = 0x7};
     

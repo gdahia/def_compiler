@@ -1,4 +1,4 @@
-#include <scanner.hpp>
+#include <lex.hpp>
 
 using namespace lex;
 

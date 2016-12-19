@@ -1,4 +1,4 @@
-#include <scanner.hpp>
+#include <lex.hpp>
 #include <iostream>
 
 int main(int argc, char ** argv) {
