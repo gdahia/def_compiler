@@ -12,7 +12,7 @@ bool Scanner::is_alphanumerical(const char c) const {
 }
 
 bool Scanner::is_alphabetical(const char c) const {
-    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_');
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
 bool Scanner::is_numeral(const char c) const {
@@ -40,7 +40,7 @@ Token Scanner::next_token() {
     ret += static_cast<char>(src_file.get());
     
     if (is_alphabetical(ret[0])) {
-        // if first char is alphanumerical, then token type is either ID or KEY
+        // if first char is alphabetical, then token type is either ID or KEY
         // get chars while they are alphanumerical
         while (is_alphanumerical(src_file.peek()))
             ret += static_cast<char>(src_file.get());
