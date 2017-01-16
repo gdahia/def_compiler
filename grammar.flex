@@ -3,7 +3,7 @@ ID [a-zA-Z][[a-zA-Z0-9_]*
 DECIMAL [0-9]+
 COMMENT \/\/.*$
 WHITESPACE [ \t\n]+
-SYM \(|\{|\[|\]|\}|\)|\,|\;|\=\=?|\+|\-|\*|\/|\<\=?|\>\=?|\!\=?|\&\&|\|\|s
+SYM \(|\{|\[|\]|\}|\)|\,|\;|\=\=?|\+|\-|\*|\/|\<\=?|\>\=?|\!\=?|\&\&|\|\|
 KEY def|if|else|while|return|break|continue|int|void
 
 %%
