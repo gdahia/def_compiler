@@ -512,7 +512,7 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "grammar"
+#line 1 "grammar.flex"
 #line 517 "lex.yy.c"
 
 #define INITIAL 0
@@ -731,7 +731,7 @@ YY_DECL
 		}
 
 	{
-#line 9 "grammar"
+#line 9 "grammar.flex"
 
 
 #line 738 "lex.yy.c"
@@ -793,49 +793,49 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 11 "grammar"
-printf( "KEY \"%s\"\n", yytext);
+#line 11 "grammar.flex"
+printf( "KEY\t\"%s\"\n", yytext);
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 13 "grammar"
-printf("ID \"%s\"\n", yytext);
+#line 13 "grammar.flex"
+printf("ID\t\"%s\"\n", yytext);
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 15 "grammar"
-printf("DECIMAL \"%d\"\n", atoi(yytext));
+#line 15 "grammar.flex"
+printf("DECIMAL\t\"%d\"\n", atoi(yytext));
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 17 "grammar"
-printf("SYM \"%s\"\n", yytext);
+#line 17 "grammar.flex"
+printf("SYM\t\"%s\"\n", yytext);
 	YY_BREAK
 case 5:
 *yy_cp = (yy_hold_char); /* undo effects of setting up yytext */
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 19 "grammar"
+#line 19 "grammar.flex"
 /* eat up one-line comments */
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 21 "grammar"
+#line 21 "grammar.flex"
 /* eat up whitespace */
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 23 "grammar"
+#line 23 "grammar.flex"
 {
-    printf("ERROR %s\n", yytext);
+    printf("ERROR\t\"%s\"\n", yytext);
     exit(1);
 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 28 "grammar"
+#line 28 "grammar.flex"
 ECHO;
 	YY_BREAK
 #line 842 "lex.yy.c"
@@ -1839,7 +1839,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 28 "grammar"
+#line 28 "grammar.flex"
 
 
 

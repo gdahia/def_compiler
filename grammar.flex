@@ -8,20 +8,20 @@ KEY def|if|else|while|return|break|continue|int|void
 
 %%
 
-{KEY} printf( "KEY \"%s\"\n", yytext);
+{KEY} printf( "KEY\t\"%s\"\n", yytext);
 
-{ID} printf("ID \"%s\"\n", yytext);
+{ID} printf("ID\t\"%s\"\n", yytext);
 
-{DECIMAL} printf("DECIMAL \"%d\"\n", atoi(yytext));
+{DECIMAL} printf("DECIMAL\t\"%s\"\n", yytext);
 
-{SYM} printf("SYM \"%s\"\n", yytext);
+{SYM} printf("SYM\t\"%s\"\n", yytext);
 
 {COMMENT} /* eat up one-line comments */
 
 {WHITESPACE} /* eat up whitespace */
 
 . {
-    printf("ERROR %s\n", yytext);
+    printf("ERROR\t\"%s\"\n", yytext);
     exit(1);
 }
 
