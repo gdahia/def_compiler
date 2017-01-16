@@ -3,7 +3,7 @@ ID [a-zA-Z][[a-zA-Z0-9_]*
 DECIMAL [0-9]+
 COMMENT \/\/.*$
 WHITESPACE [ \t\n]+
-SYM (\()|(\{)|(\[)|(\])|(\})|(\))|(\,)|(\;)|(\=\=?)|(\+)|(\-)|(\*)|(\/)|(\<\=?)|(\>\=?)|(\!\=?)|(\&\&)|(\|\|)
+SYM \(|\{|\[|\]|\}|\)|\,|\;|\=\=?|\+|\-|\*|\/|\<\=?|\>\=?|\!\=?|\&\&|\|\|s
 KEY def|if|else|while|return|break|continue|int|void
 
 %%
@@ -27,14 +27,13 @@ KEY def|if|else|while|return|break|continue|int|void
 
 %%
 
-int main(int argc, char **argv )
-   {
-   ++argv, --argc;	/* skip over program name */
-   if (argc > 0)
-       yyin = fopen(argv[0], "r");
-   else
-       yyin = stdin;
-
-   yylex();
-   return 0;
-   }
+int main(int argc, char **argv ) {
+    if (argc > 0)
+        yyin = fopen(argv[1], "r");
+    else
+        yyin = stdin;
+    if (argc > 1)
+        stdout = fopen(argv[2], "w");
+    yylex();
+    return 0;
+}
