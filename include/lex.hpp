@@ -35,7 +35,7 @@ namespace lex {
     class Scanner {
     private:
         std::ifstream src_file;
-        std::unordered_map<std::string, Token::Type> word_filter = {{"def", Token::Type::KEY}, {"if", Token::Type::KEY}, {"else", Token::Type::KEY}, {"main", Token::Type::KEY}, {"break", Token::Type::KEY}, {"continue", Token::Type::KEY}, {"return", Token::Type::KEY}, {"int", Token::Type::KEY}};
+        std::unordered_map<std::string, Token::Type> word_filter = {{"def", Token::Type::KEY}, {"if", Token::Type::KEY}, {"else", Token::Type::KEY}, {"while", Token::Type::KEY}, {"break", Token::Type::KEY}, {"continue", Token::Type::KEY}, {"return", Token::Type::KEY}, {"int", Token::Type::KEY}};
         
         void discard_whitespaces();
         bool is_alphanumerical(const char) const;
