@@ -1,0 +1,6 @@
+ID [:alpha:][[:alpha:]0-9_]
+DECIMAL [:digit:]+
+COMMENT \/\/.*$
+WHITESPACE [:blank:]+
+SYM (\()|(\{)|(\[)|(\])|(\})|(\))|(\,)|(\;)|(\=)|(\+)|(\-)|(\*)|(\/)|(\<)|(\>)|(\<\=)|(\>\=)|(\=\=)|(\!\=)|(\&\&)|(\|\|)|(\!)
+KEY ((def)|(if)|(else)|(while)|(return)|(break)|(continue)|(int)|(void))/($|{COMMENT}|{SYM}|{WHITESPACE})
