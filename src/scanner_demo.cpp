@@ -17,17 +17,23 @@ int main(int argc, char ** argv) {
         
         lex::Scanner scanner(argv[1]);
         for (const lex::Token & t : scanner.get_all_tokens()) {
-            output_file << t << std::endl;
-            if (t.type == lex::Token::Type::ERROR)
+            if (t.type == lex::Token::Type::ERROR) {
+                std::cerr << t << std::endl;
                 return 1;
+            }
+            else
+                output_file << t << std::endl;
         }
     }
     else {
         lex::Scanner scanner(argv[1]);
         for (const lex::Token & t : scanner.get_all_tokens()) {
-            std::cout << t << std::endl;
-            if (t.type == lex::Token::Type::ERROR)
+            if (t.type == lex::Token::Type::ERROR) {
+                std::cerr << t << std::endl;
                 return 1;
+            }
+            else
+                std::cout << t << std::endl;
         }
     }
 }

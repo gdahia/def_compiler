@@ -21,7 +21,7 @@ KEY def|if|else|while|return|break|continue|int|void
 {WHITESPACE} /* eat up whitespace */
 
 . {
-    printf("ERROR\t\"%s\"\n", yytext);
+    fprintf(stderr, "ERROR\t\"%s\"\n", yytext);
     exit(1);
 }
 

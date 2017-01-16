@@ -829,7 +829,7 @@ case 7:
 YY_RULE_SETUP
 #line 23 "grammar.flex"
 {
-    printf("ERROR\t\"%s\"\n", yytext);
+    fprintf(stderr, "ERROR\t\"%s\"\n", yytext);
     exit(1);
 }
 	YY_BREAK
