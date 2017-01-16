@@ -1,6 +1,40 @@
-ID [:alpha:][[:alpha:]0-9_]
-DECIMAL [:digit:]+
+%option noyywrap
+ID [a-zA-Z][[a-zA-Z0-9_]*
+DECIMAL [0-9]+
 COMMENT \/\/.*$
-WHITESPACE [:blank:]+
-SYM (\()|(\{)|(\[)|(\])|(\})|(\))|(\,)|(\;)|(\=)|(\+)|(\-)|(\*)|(\/)|(\<)|(\>)|(\<\=)|(\>\=)|(\=\=)|(\!\=)|(\&\&)|(\|\|)|(\!)
-KEY ((def)|(if)|(else)|(while)|(return)|(break)|(continue)|(int)|(void))/($|{COMMENT}|{SYM}|{WHITESPACE})
+WHITESPACE [ \t\n]+
+SYM (\()|(\{)|(\[)|(\])|(\})|(\))|(\,)|(\;)|(\=\=?)|(\+)|(\-)|(\*)|(\/)|(\<\=?)|(\>\=?)|(\!\=?)|(\&\&)|(\|\|)
+KEY def|if|else|while|return|break|continue|int|void
+
+%%
+
+{KEY} printf( "KEY \"%s\"\n", yytext);
+
+{ID} printf("ID \"%s\"\n", yytext);
+
+{DECIMAL} printf("DECIMAL \"%d\"\n", atoi(yytext));
+
+{SYM} printf("SYM \"%s\"\n", yytext);
+
+{COMMENT} /* eat up one-line comments */
+
+{WHITESPACE} /* eat up whitespace */
+
+. {
+    printf("ERROR %s\n", yytext);
+    exit(1);
+}
+
+%%
+
+int main(int argc, char **argv )
+   {
+   ++argv, --argc;	/* skip over program name */
+   if (argc > 0)
+       yyin = fopen(argv[0], "r");
+   else
+       yyin = stdin;
+
+   yylex();
+   return 0;
+   }
