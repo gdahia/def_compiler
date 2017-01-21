@@ -804,7 +804,7 @@ printf("ID\t\"%s\"\n", yytext);
 case 3:
 YY_RULE_SETUP
 #line 15 "grammar.flex"
-printf("DECIMAL\t\"%s\"\n", yytext);
+printf("DEC\t\"%s\"\n", yytext);
 	YY_BREAK
 case 4:
 YY_RULE_SETUP

@@ -12,7 +12,7 @@ KEY def|if|else|while|return|break|continue|int|void
 
 {ID} printf("ID\t\"%s\"\n", yytext);
 
-{DECIMAL} printf("DECIMAL\t\"%s\"\n", yytext);
+{DECIMAL} printf("DEC\t\"%s\"\n", yytext);
 
 {SYM} printf("SYM\t\"%s\"\n", yytext);
 

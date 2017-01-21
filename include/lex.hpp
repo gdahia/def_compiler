@@ -16,7 +16,7 @@ namespace lex {
         friend std::ostream & operator << (std::ostream & os, const Token & t) {
             switch (t.type) {
                 case ID: os << "ID\t"; break;
-                case DECIMAL: os << "DECIMAL\t"; break;
+                case DECIMAL: os << "DEC\t"; break;
                 case KEY: os << "KEY\t"; break;
                 case SYM: os << "SYM\t"; break;
                 case COMMENT: os << "COMMENT\t"; break;
