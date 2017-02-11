@@ -33,7 +33,7 @@ Token Scanner::next_token() {
     
     // no more tokens filter
     if (src_file.peek() == EOF)
-        return Token(Token::Type::EoF, "");
+        return Token(Token::Type::EoF);
     
     // get current char
     std::string ret;
@@ -46,7 +46,11 @@ Token Scanner::next_token() {
             ret += static_cast<char>(src_file.get());
 
         // match token type in hash table
-        return Token(word_filter[ret], ret);
+        Token::Type t = word_filter[ret];
+        if (t == Token::Type::ID)
+            return Token(t, ret);
+        else
+            return Token(t);
     }
     else if (is_numeral(ret[0])) {
         // if first char is numeral, then token type is NUM
@@ -54,7 +58,7 @@ Token Scanner::next_token() {
         while (is_numeral(src_file.peek()))
             ret += static_cast<char>(src_file.get());
 
-        return Token(Token::Type::DECIMAL, ret);
+        return Token(Token::Type::DEC, ret);
     }
     else {
         // if neither above, first char is either SYM or ERROR
@@ -66,41 +70,61 @@ Token Scanner::next_token() {
                     // discard whole comment
                     while (src_file.peek() != EOF && src_file.peek() != '\n')
                         ret += static_cast<char>(src_file.get());
-                    return Token(Token::Type::COMMENT, ret);
+                    return Token(Token::Type::COMMENT);
                 }
+            return Token(Token::Type::SLASH);
             // match single symbol only SYMs
-            case '+':
-            case '-':
-            case '*':
-            case ',':
-            case ';':
-            case '(':
-            case ')':
-            case '[':
-            case ']':
-            case '{':
-            case '}':
-                return Token(Token::Type::SYM, ret);
-
+            case '+': return Token(Token::Type::PLUS);
+            case '-': return Token(Token::Type::MINUS);
+            case '*': return Token(Token::Type::STAR);
+            case ',': return Token(Token::Type::COMMA);
+            case ';': return Token(Token::Type::SCOLON);
+            case '(': return Token(Token::Type::LPAR);
+            case ')': return Token(Token::Type::RPAR);
+            case '{': return Token(Token::Type::LBRAC);
+            case '}': return Token(Token::Type::RBRAC);
             // match logical SYMs
             case '&':
-            case '|':
-                if (ret[0] == src_file.peek()) {
-                    ret += static_cast<char>(src_file.get());
-                    return Token(Token::Type::SYM, ret);
+                if ('&' == src_file.peek()) {
+                    src_file.get();
+                    return Token(Token::Type::AND);
                 }
-                break;
-
-            // match remainder of math SYMs
+            break;
+            case '|':
+                if ('|' == src_file.peek()) {
+                    src_file.get();
+                    return Token(Token::Type::OR);
+                }
+            break;
+            // match symbols that could be followed by =
             case '=':
+                if ('=' == src_file.peek()) {
+                    src_file.get();
+                    return Token(Token::Type::EQ);
+                }
+                else
+                    return Token(Token::Type::ASS);
             case '<':
+                if ('=' == src_file.peek()) {
+                    src_file.get();
+                    return Token(Token::Type::LEQ);
+                }
+                else
+                    return Token(Token::Type::LESS);
             case '>':
+                if ('=' == src_file.peek()) {
+                    src_file.get();
+                    return Token(Token::Type::GEQ);
+                }
+                else
+                    return Token(Token::Type::GREAT);
             case '!':
-                // check if they are followed by '='
-                if (src_file.peek() == '=')
-                    ret += static_cast<char>(src_file.get());
-
-                return Token(Token::Type::SYM, ret);
+                if ('=' == src_file.peek()) {
+                    src_file.get();
+                    return Token(Token::Type::DIFF);
+                }
+                else
+                    return Token(Token::Type::NOT);
         }
     }
     
