@@ -1,6 +1,6 @@
 Program     ->  (DecVar | DecFunc)*
 
-DecVar      ->  Type ID ('=' Expr)? ';'
+DecVar      ->  Type ID ('=' E1)? ';'
 
 DecFunc     ->  DEF Type ID '(' ParamList? ')' Block
 
@@ -10,38 +10,50 @@ Block       ->  '{' DecVar* Stmt* '}'
 
 Stmt        ->  Assign ';' |
                 FuncCall ';' |
-                if '(' Expr ')' Block (else Block)? |
-                while '(' Expr ')' Block |
-                return Expr? ';' |
-                break ';' |
-                continue ';'
+                IF '(' E1 ')' Block (ELSE Block)? |
+                WHILE '(' E1 ')' Block |
+                RETURN E1? ';' |
+                BREAK ';' |
+                CONTINUE ';'
 
-Assign      ->  ID '=' Expr
+Assign      ->  ID '=' E1
 
 FuncCall    ->  ID '(' ArgList? ')'
 
-ArgList     ->  Expr (',' Expr)*
+ArgList     ->  E1 (',' E1)*
 
-Expr        ->  Expr BinOp Expr |
-                UnOp Expr |
-                '(' Expr ')' |
+E1          ->  E1 '||' E2 |
+                E2
+                
+E2          ->  E2 '&&' E3 |
+                E3
+
+E3          ->  E3 '==' E4 |
+                E4
+
+E4          ->  E4 '<' E5 |
+                E4 '<=' E5 |
+                E4 '>' E5 |
+                E4 '>=' E5 |
+                E5
+
+E5          ->  E5 '+' E6 |
+                E5 '-' E6 |
+                E6
+
+E6          ->  E6 '*' E7 |
+                E6 '/' E7 |
+                E7
+
+E7          ->  '!' E7 |
+                E8
+
+E8          ->  '-' E8 |
+                E9
+
+E9          ->  DEC |
+                ID |
                 FuncCall |
-                DEC |
-                ID
+                '(' E1 ')'
 
-BinOp       ->  '+' |
-                '-' |
-                '*' |
-                '/' |
-                '<' |
-                '<=' |
-                '>' |
-                '>=' |
-                '==' |
-                '!=' |
-                '&&' |
-                '||'
-
-UnOp        -> '-'  | '!'
-
-Type        -> INT | VOID
+Type        ->  INT | VOID
