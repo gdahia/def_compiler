@@ -1,0 +1,38 @@
+Program     ->  (DecVar | DecFunc)*
+
+DecVar      ->  Type ID ('=' Expr)? ';'
+
+DecFunc     ->  DEF Type ID '(' ParamList? ')' Block
+
+ParamList   ->  Type ID (',' Type ID)*
+
+Block       ->  '{' DecVar* Stmt* '}'
+
+Stmt        ->  Assign ';' |
+                FuncCall ';' |
+                if '(' Expr ')' Block (else Block)? |
+                while '(' Expr ')' Block |
+                return Expr? ';' |
+                break ';' |
+                continue ';'
+
+Assign      ->  ID '=' Expr
+
+FuncCall    ->  ID '(' ArgList? ')'
+
+ArgList     ->  Expr (',' Expr)*
+
+Expr        ->  Expr BinOp Expr |
+                UnOp Expr |
+                '(' Expr ')' |
+                FuncCall |
+                DEC |
+                ID
+
+BinOp       ->  '+' |
+                '-' | '*' | '/' | '<' | '<=' |
+            '>' | '>=' | '==' | '!=' | '&&' | '||'
+
+UnOp        -> '-'  | '!'
+
+Type        -> INT | VOID
