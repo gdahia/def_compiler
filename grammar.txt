@@ -8,17 +8,19 @@ ParamList   ->  Type ID (',' Type ID)*
 
 Block       ->  '{' DecVar* Stmt* '}'
 
-Stmt        ->  Assign ';' |
-                FuncCall ';' |
+Stmt        ->  ID Decl ';' |
                 IF '(' E1 ')' Block (ELSE Block)? |
                 WHILE '(' E1 ')' Block |
                 RETURN E1? ';' |
                 BREAK ';' |
                 CONTINUE ';'
 
-Assign      ->  ID '=' E1
+Decl        ->  Assign |
+                FuncCall |
 
-FuncCall    ->  ID '(' ArgList? ')'
+Assign      ->  '=' E1
+
+FuncCall    ->  '(' ArgList? ')'
 
 ArgList     ->  E1 (',' E1)*
 
