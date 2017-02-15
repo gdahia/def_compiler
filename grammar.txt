@@ -28,13 +28,13 @@ Stmt*       ->  Stmt Stmt* |
                 ε
 
 Stmt        ->  ID Decl ';' |
-                IF '(' E1 ')' Block FI? |
+                IF '(' E1 ')' Block Fi? |
                 WHILE '(' E1 ')' Block |
                 RETURN E1? ';' |
                 BREAK ';' |
                 CONTINUE ';'
 
-FI?         ->  ELSE Block |
+Fi?         ->  ELSE Block |
                 ε
 
 E1?         ->  E1 |
