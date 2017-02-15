@@ -1,19 +1,44 @@
-Program     ->  (DecVar | DecFunc)*
+Program     ->  Instr
 
-DecVar      ->  Type ID ('=' E1)? ';'
+Instr       ->  DecVar Instr |
+                DecFunc Instr |
+                ε
+
+DecVar      ->  Type ID Assign? ';'
+
+Assign?     ->  Assign |
+                ε
 
 DecFunc     ->  DEF Type ID '(' ParamList? ')' Block
 
-ParamList   ->  Type ID (',' Type ID)*
+ParamList?  ->  ParamList |
+                ε
+
+ParamList   ->  Type ID OtherParam
+
+OtherParam  ->  ',' ParamList |
+                ε
 
 Block       ->  '{' DecVar* Stmt* '}'
 
+DecVar*     ->  DecVar DecVar* |
+                ε
+
+Stmt*       ->  Stmt Stmt* |
+                ε
+
 Stmt        ->  ID Decl ';' |
-                IF '(' E1 ')' Block (ELSE Block)? |
+                IF '(' E1 ')' Block FI? |
                 WHILE '(' E1 ')' Block |
                 RETURN E1? ';' |
                 BREAK ';' |
                 CONTINUE ';'
+
+FI?         ->  ELSE Block |
+                ε
+
+E1?         ->  E1 |
+                ε
 
 Decl        ->  Assign |
                 FuncCall |
