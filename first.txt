@@ -22,7 +22,7 @@ First(FuncCall)     = {'('}
 First(Assign)       = {'='}
 First(Decl)         = {'=', '('}
 First(E1?)          = {'!', '-', DEC, ID, '(', ε}
-First(Fi?)          = {'ELSE', ε}
+First(Fi?)          = {ELSE, ε}
 First(Stmt)         = {ID, IF, WHILE, RETURN, BREAK, CONTINUE}
 First(Stmt*)        = {ID, IF, WHILE, RETURN, BREAK, CONTINUE, ε}
 First(DecVar*)      = {INT, VOID, ε}
