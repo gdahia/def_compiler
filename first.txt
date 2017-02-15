@@ -1,27 +1,37 @@
-First(Type) = {INT, VOID}
-First(FuncCall) = {'('}
-First(E10) = {'(', ε}
-First(E9) = {DEC, ID, '('}
-First(E8) = {'-', DEC, ID, '('}
-First(E7) = {'!', '-', DEC, ID, '('}
-First(E6') = {'*', '/', ε}
-First(E6) = {'!', '-', DEC, ID, '('}
-First(E5') = {'+', '-', ε}
-First(E5) = {'!', '-', DEC, ID, '('}
-First(E4') = {'<', '<=', '>', '>=', ε}
-First(E4) = {'!', '-', DEC, ID, '('}
-First(E3') = {'==', '!=', ε}
-First(E3) = {'!', '-', DEC, ID, '('}
-First(E2') = {'&&', ε}
-First(E2) = {'!', '-', DEC, ID, '('}
-First(E1') = {'||', ε}
-First(E1) = {'!', '-', DEC, ID, '('}
-First(ArgList) = {'!', '-', DEC, ID, '('}
-First(Assign) = {'='}
-First(Decl) = {'=', '('}
-First(Stmt) = {ID, IF, WHILE, RETURN, BREAK, CONTINUE}
-First(Block) = {'{'}
-First(ParamList) = {INT, VOID}
-First(DecFunc) = {DEF}
-First(DecVar) = {INT, VOID}
-First(Program) = {DEF, INT, VOID}
+First(Type)         = {INT, VOID}
+First(E10)          = {'(', ε}
+First(E9)           = {DEC, ID, '('}
+First(E8)           = {'-', DEC, ID, '('}
+First(E7)           = {'!', '-', DEC, ID, '('}
+First(E6')          = {'*', '/', ε}
+First(E6)           = {'!', '-', DEC, ID, '('}
+First(E5')          = {'+', '-', ε}
+First(E5)           = {'!', '-', DEC, ID, '('}
+First(E4')          = {'<', '<=', '>', '>=', ε}
+First(E4)           = {'!', '-', DEC, ID, '('}
+First(E3')          = {'==', '!=', ε}
+First(E3)           = {'!', '-', DEC, ID, '('}
+First(E2')          = {'&&', ε}
+First(E2)           = {'!', '-', DEC, ID, '('}
+First(E1')          = {'||', ε}
+First(E1)           = {'!', '-', DEC, ID, '('}
+First(Arg*)         = {',', ε}
+First(ArgList)      = {'!', '-', DEC, ID, '('}
+First(ArgList?)     = {'!', '-', DEC, ID, '(', ε}
+First(FuncCall)     = {'('}
+First(Assign)       = {'='}
+First(Decl)         = {'=', '('}
+First(E1?)          = {'!', '-', DEC, ID, '(', ε}
+First(Fi?)          = {'ELSE', ε}
+First(Stmt)         = {ID, IF, WHILE, RETURN, BREAK, CONTINUE}
+First(Stmt*)        = {ID, IF, WHILE, RETURN, BREAK, CONTINUE, ε}
+First(DecVar*)      = {INT, VOID, ε}
+First(Block)        = {'{'}
+First(Param*)       = {',', ε}
+First(ParamList)    = {INT, VOID}
+First(ParamList?)   = {INT, VOID, ε}
+First(DecFunc)      = {DEF}
+First(Assign?)      = {'=', ε}
+First(DecVar)       = {INT, VOID}
+First(Instr)        = {INT, VOID, DEF, ε}
+First(Program)      = {DEF, INT, VOID, ε}
