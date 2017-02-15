@@ -67,8 +67,10 @@ E8          ->  '-' E8 |
                 E9
 
 E9          ->  DEC |
-                ID |
-                FuncCall |
+                ID E10 |
                 '(' E1 ')'
+
+E10         ->  FuncCall |
+                €
 
 Type        ->  INT | VOID
