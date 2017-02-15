@@ -41,7 +41,7 @@ E1?         ->  E1 |
                 ε
 
 Decl        ->  Assign |
-                FuncCall |
+                FuncCall
 
 Assign      ->  '=' E1
 
