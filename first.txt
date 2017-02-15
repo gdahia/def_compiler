@@ -1,0 +1,27 @@
+First(Type) = {INT, VOID}
+First(FuncCall) = {'('}
+First(E10) = {'(', ε}
+First(E9) = {DEC, ID, '('}
+First(E8) = {'-', DEC, ID, '('}
+First(E7) = {'!', '-', DEC, ID, '('}
+First(E6') = {'*', '/', ε}
+First(E6) = {'!', '-', DEC, ID, '('}
+First(E5') = {'+', '-', ε}
+First(E5) = {'!', '-', DEC, ID, '('}
+First(E4') = {'<', '<=', '>', '>=', ε}
+First(E4) = {'!', '-', DEC, ID, '('}
+First(E3') = {'==', '!=', ε}
+First(E3) = {'!', '-', DEC, ID, '('}
+First(E2') = {'&&', ε}
+First(E2) = {'!', '-', DEC, ID, '('}
+First(E1') = {'||', ε}
+First(E1) = {'!', '-', DEC, ID, '('}
+First(ArgList) = {'!', '-', DEC, ID, '('}
+First(Assign) = {'='}
+First(Decl) = {'=', '('}
+First(Stmt) = {ID, IF, WHILE, RETURN, BREAK, CONTINUE}
+First(Block) = {'{'}
+First(ParamList) = {INT, VOID}
+First(DecFunc) = {DEF}
+First(DecVar) = {INT, VOID}
+First(Program) = {DEF, INT, VOID}
