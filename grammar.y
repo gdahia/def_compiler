@@ -30,11 +30,11 @@ void yyerror(const char * s) {
     int token;
 }
 
-%token <token> DEF IF WHILE RETURN CONTINUE BREAK ELSE
 %token <token> INT VOID
-%token <token> LEQ GEQ AND OR EQ DIFF MINUS PLUS STAR SLASH ASS
-%token <token> LPAR RPAR LBRAC RBRAC COMMA SCOLON
 %token <lexeme> ID DEC
+%token DEF IF WHILE RETURN CONTINUE BREAK ELSE
+%token LEQ GEQ AND OR EQ DIFF MINUS PLUS STAR SLASH ASS
+%token LPAR RPAR LBRAC RBRAC COMMA SCOLON
 
 %type <expr> expr
 %type <token> type
@@ -66,7 +66,7 @@ instr       : decvar instr { program.push_back($1); }
             | /*empty*/
             ;
 decvar      : type ID SCOLON { $$ = std::make_shared<AST::DecVar>($1, $2); }
-            | type ID SCOLON ASS expr { $$ = std::make_shared<AST::DecVar>($1, $2, $3); }
+            | type ID SCOLON ASS expr { $$ = std::make_shared<AST::DecVar>($1, $2, $5); }
             ;
 decfunc     : DEF type ID LPAR paramlist RPAR block { $$ = std::make_shared<AST::DecFunc>($2, $3, $5, $7); }
             | DEF type ID LPAR RPAR block { $$ = std::make_shared<AST::DecFunc>($2, $3, $6); }
@@ -98,8 +98,8 @@ decl        : assign { $$ = $1 }
             ;
 assign      : ID ASS expr { $$ = std::make_shared<AST::Assign>($1, $3); }
             ;
-funccal     : ID LPAR arglist RPAR { $$ = new AST::FuncCall($1, $3) }
-            | ID LPAR RPAR { $$ = new AST::FuncCall($1, $3) }
+funccal     : ID LPAR arglist RPAR { $$ = std::make_shared<AST::FuncCall>($1, $3); }
+            | ID LPAR RPAR { $$ = std::make_shared<AST::FuncCall>($1); }
             ;
 arglist     : expr args { $2->push_back($1); $$ = $2; }
             ;
