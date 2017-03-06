@@ -39,6 +39,14 @@
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+#line 18 "src/grammar.y" /* yacc.c:1909  */
+
+#include <holder.hpp>
+
+#define YYSTYPE Holder
+
+#line 50 "src/parser.hpp" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -81,32 +89,6 @@ extern int yydebug;
 #endif
 
 /* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
-union YYSTYPE
-{
-#line 18 "grammar.y" /* yacc.c:1909  */
-
-    AST::Expr * expr;
-    std::vector<AST::Expr *> * args;
-    AST::FuncCall * funccall;
-    AST::Stmt * stmt;
-    AST::Block * block;
-    std::vector<AST::Stmt *> * stmts;
-    std::vector<AST::DecVar *> * decvars;
-    std::vector<AST::Param> * params;
-    AST::DecVar * decvar;
-    AST::DecFunc * decfunc;
-    std::string * lexeme;
-    int token;
-
-#line 104 "src/parser.hpp" /* yacc.c:1909  */
-};
-
-typedef union YYSTYPE YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
-#endif
 
 
 extern YYSTYPE yylval;

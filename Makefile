@@ -1,21 +1,33 @@
-CXX = g++
+CXX = clang++
 
 CXXFLAGS = -std=c++11 -O3 -Wall
 
 INCLUDE = -I $(CURDIR)/include
 
-all: scanner_demo.out
+all: def_compiler.out
 
-scanner_demo.out: build/scanner.o build/scanner_demo.o
+def_compiler.out: build/parser.o build/ast.o build/scanner.o build/def_compiler.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
-build/scanner.o: src/scanner.cpp include/lex.hpp
+build/scanner.o: src/scanner.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+build/parser.o: src/parser.cpp include/parser.hpp include/ast.hpp include/holder.hpp
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+src/scanner.cpp: src/lex.l
+	lex -o $@ $<
+
+src/parser.cpp: src/grammar.y
+	bison -d -o $@ $<
+
+include/parser.hpp: src/parser.cpp
+	mv src/parser.hpp $@
 
 build/%.o: src/%.cpp include/%.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
-build/scanner_demo.o: src/scanner_demo.cpp include/lex.hpp
+build/def_compiler.o: src/def_compiler.cpp include/parser.hpp include/ast.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:

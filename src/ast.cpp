@@ -1,0 +1,73 @@
+#include <ast.hpp>
+#include <parser.hpp>
+
+using namespace AST;
+
+Param::Param(const int type, const std::shared_ptr<std::string> name) : name(name) {
+    if (type == VOID)
+        throw std::runtime_error("Error: variable " + *name + " declared \'void\'");
+}
+
+DecVar::DecVar(const int type, const std::shared_ptr<std::string> name) : name(name) {
+    if (type == VOID)
+        throw std::runtime_error("Error: variable " + *name + " declared \'void\'");
+}
+
+DecVar::DecVar(const int type, const std::shared_ptr<std::string> name, const std::shared_ptr<Expr> rhs) : name(name), rhs(rhs) {
+    if (type == VOID)
+        throw std::runtime_error("Error: variable " + *name + " declared \'void\'");
+}
+
+DecFunc::DecFunc(const int type, const std::shared_ptr<std::string> name, const std::shared_ptr<std::vector<Param>> paramlist, const std::shared_ptr<Block> block) : type(type), name(name), paramlist(paramlist), block(block) {}
+
+DecFunc::DecFunc(const int type, const std::shared_ptr<std::string> name, const std::shared_ptr<Block> block) : type(type), name(name), block(block) {}
+
+Block::Block(const std::shared_ptr<std::vector<std::shared_ptr<DecVar>>> vars, const std::shared_ptr<std::vector<std::shared_ptr<Stmt>>> funcs) : vars(vars), funcs(funcs) {}    
+
+Assign::Assign(const std::shared_ptr<std::string> lhs, const std::shared_ptr<Expr> rhs) : lhs(lhs), rhs(rhs) {}    
+
+If::If(const std::shared_ptr<Expr> expr, const std::shared_ptr<Block> if_block) : expr(expr), if_block(if_block) {}
+
+If::If(const std::shared_ptr<Expr> expr, const std::shared_ptr<Block> if_block, const std::shared_ptr<Block> else_block) : expr(expr), if_block(if_block), else_block(else_block) {}    
+
+While::While(const std::shared_ptr<Expr> expr, const std::shared_ptr<Block> block) : expr(expr), block(block) {}
+
+Return::Return() {}
+
+Return::Return(const std::shared_ptr<Expr> expr) : expr(expr) {}
+
+Add::Add(const std::shared_ptr<Expr> left, const std::shared_ptr<Expr> right) : left(left), right(right) {}
+
+Sub::Sub(const std::shared_ptr<Expr> left, const std::shared_ptr<Expr> right) : left(left), right(right) {}
+
+Times::Times(const std::shared_ptr<Expr> left, const std::shared_ptr<Expr> right) : left(left), right(right) {}
+
+Div::Div(const std::shared_ptr<Expr> left, const std::shared_ptr<Expr> right) : left(left), right(right) {}
+
+Less::Less(const std::shared_ptr<Expr> left, const std::shared_ptr<Expr> right) : left(left), right(right) {}
+
+Leq::Leq(const std::shared_ptr<Expr> left, const std::shared_ptr<Expr> right) : left(left), right(right) {}
+
+Great::Great(const std::shared_ptr<Expr> left, const std::shared_ptr<Expr> right) : left(left), right(right) {}
+
+Geq::Geq(const std::shared_ptr<Expr> left, const std::shared_ptr<Expr> right) : left(left), right(right) {}
+
+Eq::Eq(const std::shared_ptr<Expr> left, const std::shared_ptr<Expr> right) : left(left), right(right) {}
+
+Diff::Diff(const std::shared_ptr<Expr> left, const std::shared_ptr<Expr> right) : left(left), right(right) {}
+
+And::And(const std::shared_ptr<Expr> left, const std::shared_ptr<Expr> right) : left(left), right(right) {}
+
+Or::Or(const std::shared_ptr<Expr> left, const std::shared_ptr<Expr> right) : left(left), right(right) {}
+
+Not::Not(const std::shared_ptr<Expr> expr) : expr(expr) {}
+
+Opp::Opp(const std::shared_ptr<Expr> expr) : expr(expr) {}
+
+Number::Number(const std::shared_ptr<std::string> lexeme) : val(std::stol(*lexeme)) {}
+
+Var::Var(const std::shared_ptr<std::string> name) : name(name) {}
+
+FuncCall::FuncCall(const std::shared_ptr<std::string> name, const std::shared_ptr<std::vector<std::shared_ptr<Expr>>> args) : name(name), args(args) {}
+
+FuncCall::FuncCall(const std::shared_ptr<std::string> name) : name(name) {}
