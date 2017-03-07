@@ -4,13 +4,12 @@
 
 #include <ast.hpp>
 
-std::vector<std::shared_ptr<AST::Instr>> program;
+AST::Program program;
 
 extern int yylex();
 
 void yyerror(const char * s) {
-    // throw std::runtime_error("Error: " + std::string
-    printf("ERROR: %s\n", s);
+    throw std::runtime_error(s);
 }
 
 %}
@@ -52,12 +51,12 @@ void yyerror(const char * s) {
 
 program     : instr
             ;
-instr       : decvar instr { program.push_back($1); }
-            | decfunc instr { program.push_back($1); }
+instr       : decvar instr { program.instr.push_back($1); }
+            | decfunc instr { program.instr.push_back($1); }
             | /*empty*/
             ;
 decvar      : type ID SCOLON { $$ = std::make_shared<AST::DecVar>($1, $2); }
-            | type ID SCOLON ASS expr { $$ = std::make_shared<AST::DecVar>($1, $2, $5); }
+            | type ID ASS expr SCOLON { $$ = std::make_shared<AST::DecVar>($1, $2, $4); }
             ;
 decfunc     : DEF type ID LPAR paramlist RPAR block { $$ = std::make_shared<AST::DecFunc>($2, $3, $5, $7); }
             | DEF type ID LPAR RPAR block { $$ = std::make_shared<AST::DecFunc>($2, $3, $6); }

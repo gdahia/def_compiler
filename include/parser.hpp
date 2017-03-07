@@ -40,7 +40,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 18 "src/grammar.y" /* yacc.c:1909  */
+#line 17 "src/grammar.y" /* yacc.c:1909  */
 
 #include <holder.hpp>
 

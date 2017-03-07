@@ -31,4 +31,4 @@ build/def_compiler.o: src/def_compiler.cpp include/parser.hpp include/ast.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
-	@rm -f build/*.o *.out
+	@rm -f build/*.o *.out src/parser.cpp src/scanner.cpp include/parser.hpp
