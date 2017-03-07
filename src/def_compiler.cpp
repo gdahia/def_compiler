@@ -1,13 +1,29 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <memory>
 
 #include <ast.hpp>
 #include <parser.hpp>
 
-extern std::vector<std::shared_ptr<AST::Instr>> program;
+extern AST::Program program;
 extern int yyparse();
+extern FILE * yyin;
 
-int main(int argc, char ** argv) {
-    yyparse();
+int main(const int argc, const char ** argv) {
+    if (argc > 1)
+        yyin = fopen(argv[1], "r");
+    if (argc > 2) {
+        std::ofstream out(argv[2]);
+        if (out.is_open()) {
+            yyparse();
+            out << program << std::endl;
+        }
+        else
+            throw std::runtime_error("Error: unable to open file " + std::string(argv[2]));
+    }
+    else {
+        yyparse();
+        std::cout << program << std::endl;
+    }
 }

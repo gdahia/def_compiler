@@ -4,14 +4,26 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <ostream>
 
 namespace AST {
     class Node {
     public:
         virtual ~Node() = default;
+        
+        virtual void print(std::ostream &) const = 0;
     };
     
     class Instr : public Node {};
+    
+    class Program : public Node {
+    public:
+        Program() = default;
+        
+        std::vector<std::shared_ptr<Instr>> instr;
+        
+        void print(std::ostream &) const;
+    };
     
     class Stmt : public Node {};
     
@@ -25,6 +37,8 @@ namespace AST {
     
     public:
         Param(const int, const std::shared_ptr<std::string>);
+        
+        void print(std::ostream &) const;
     };
     
     class DecVar : public Instr {
@@ -35,6 +49,8 @@ namespace AST {
     public:
         DecVar(const int, const std::shared_ptr<std::string>);
         DecVar(const int, const std::shared_ptr<std::string>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class DecFunc : public Instr {
@@ -47,15 +63,19 @@ namespace AST {
     public:
         DecFunc(const int, const std::shared_ptr<std::string>, const std::shared_ptr<std::vector<Param>>, const std::shared_ptr<Block>);
         DecFunc(const int, const std::shared_ptr<std::string>, const std::shared_ptr<Block>);
+        
+        void print(std::ostream &) const;
     };
     
     class Block : public Node {
     private:
         const std::shared_ptr<std::vector<std::shared_ptr<DecVar>>> vars;
-        const std::shared_ptr<std::vector<std::shared_ptr<Stmt>>> funcs;
+        const std::shared_ptr<std::vector<std::shared_ptr<Stmt>>> stmts;
     
     public:
         Block(const std::shared_ptr<std::vector<std::shared_ptr<DecVar>>>, const std::shared_ptr<std::vector<std::shared_ptr<Stmt>>>);
+        
+        void print(std::ostream &) const;
     };
     
     class Assign : public Stmt {
@@ -65,6 +85,8 @@ namespace AST {
     
     public:
         Assign(const std::shared_ptr<std::string>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class If : public Stmt {
@@ -75,6 +97,8 @@ namespace AST {
     public:
         If(const std::shared_ptr<Expr>, const std::shared_ptr<Block>);
         If(const std::shared_ptr<Expr>, const std::shared_ptr<Block>, const std::shared_ptr<Block>);
+        
+        void print(std::ostream &) const;
     };
     
     class While : public Stmt {
@@ -84,6 +108,8 @@ namespace AST {
     
     public:
         While(const std::shared_ptr<Expr>, const std::shared_ptr<Block>);
+        
+        void print(std::ostream &) const;
     };
     
     class Return : public Stmt {
@@ -93,11 +119,19 @@ namespace AST {
     public:
         Return();
         Return(const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
-    class Continue : public Stmt {};
+    class Continue : public Stmt {
+    public:
+        void print(std::ostream &) const;
+    };
     
-    class Break : public Stmt {};
+    class Break : public Stmt {
+    public:
+        void print(std::ostream &) const;
+    };
     
     class Add : public Expr {
     private:
@@ -105,6 +139,8 @@ namespace AST {
     
     public:
         Add(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class Sub : public Expr {
@@ -113,6 +149,8 @@ namespace AST {
     
     public:
         Sub(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class Times : public Expr {
@@ -121,6 +159,8 @@ namespace AST {
     
     public:
         Times(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class Div : public Expr {
@@ -129,6 +169,8 @@ namespace AST {
     
     public:
         Div(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class Less : public Expr {
@@ -137,6 +179,8 @@ namespace AST {
     
     public:
         Less(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class Leq : public Expr {
@@ -145,6 +189,8 @@ namespace AST {
     
     public:
         Leq(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class Great : public Expr {
@@ -153,6 +199,8 @@ namespace AST {
     
     public:
         Great(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class Geq : public Expr {
@@ -161,6 +209,8 @@ namespace AST {
     
     public:
         Geq(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class Eq : public Expr {
@@ -169,6 +219,8 @@ namespace AST {
     
     public:
         Eq(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class Diff : public Expr {
@@ -177,6 +229,8 @@ namespace AST {
     
     public:
         Diff(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class And : public Expr {
@@ -185,6 +239,8 @@ namespace AST {
     
     public:
         And(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class Or : public Expr {
@@ -193,6 +249,8 @@ namespace AST {
     
     public:
         Or(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class Not : public Expr {
@@ -201,6 +259,8 @@ namespace AST {
     
     public:
         Not(const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class Opp : public Expr {
@@ -209,6 +269,8 @@ namespace AST {
     
     public:
         Opp(const std::shared_ptr<Expr>);
+        
+        void print(std::ostream &) const;
     };
     
     class Number : public Expr {
@@ -217,6 +279,8 @@ namespace AST {
     
     public:
         Number(const std::shared_ptr<std::string>);
+        
+        void print(std::ostream &) const;
     };
     
     class Var : public Expr {
@@ -225,6 +289,8 @@ namespace AST {
     
     public:
         Var(const std::shared_ptr<std::string>);
+        
+        void print(std::ostream &) const;
     };
     
     class FuncCall : public Expr {
@@ -235,8 +301,12 @@ namespace AST {
     public:
         FuncCall(const std::shared_ptr<std::string>);
         FuncCall(const std::shared_ptr<std::string>, const std::shared_ptr<std::vector<std::shared_ptr<Expr>>>);
+        
+        void print(std::ostream &) const;
     };
     
 };
+
+std::ostream & operator <<(std::ostream &, const AST::Node &);
 
 #endif
