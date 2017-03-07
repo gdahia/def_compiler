@@ -55,7 +55,6 @@ namespace AST {
     
     class DecFunc : public Instr {
     private:
-        const int type;
         const std::shared_ptr<std::string> name;
         const std::shared_ptr<std::vector<Param>> paramlist;
         const std::shared_ptr<Block> block;
@@ -76,6 +75,8 @@ namespace AST {
         Block(const std::shared_ptr<std::vector<std::shared_ptr<DecVar>>>, const std::shared_ptr<std::vector<std::shared_ptr<Stmt>>>);
         
         void print(std::ostream &) const;
+        bool has_int_return() const;
+        bool has_void_return() const;
     };
     
     class Assign : public Stmt {
@@ -121,6 +122,7 @@ namespace AST {
         Return(const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
+        bool has_val() const;
     };
     
     class Continue : public Stmt {
