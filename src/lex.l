@@ -8,11 +8,10 @@
 %}
 
 %option noyywrap
-%option yylineno
 
 %%
 
-"def" yylval.lineno = yylineno; return DEF;
+"def" return DEF;
 
 "if" return IF;
 

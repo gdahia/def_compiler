@@ -6,7 +6,7 @@
 #include <ast.hpp>
 #include <parser.hpp>
 
-extern AST::Program program;
+extern std::shared_ptr<AST::Program> program;
 extern int yyparse();
 extern FILE * yyin;
 
@@ -21,13 +21,13 @@ int main(const int argc, const char ** argv) {
         std::ofstream out(argv[2]);
         if (out.is_open()) {
             yyparse();
-            out << program << std::endl;
+            out << *program << std::endl;
         }
         else
             throw std::runtime_error("Unable to open file " + std::string(argv[2]));
     }
     else {
         yyparse();
-        std::cout << program << std::endl;
+        std::cout << *program << std::endl;
     }
 }

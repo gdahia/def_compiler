@@ -1,10 +1,11 @@
 %{
 #include <vector>
 #include <string>
+#include <memory>
 
 #include <ast.hpp>
 
-AST::Program program;
+std::shared_ptr<AST::Program> program;
 
 extern int yylex();
 
@@ -22,8 +23,7 @@ void yyerror(const char * s) {
 
 %token <token> INT VOID
 %token <lexeme> ID DEC
-%token <lineno> DEF
-%token IF WHILE RETURN CONTINUE BREAK ELSE
+%token DEF IF WHILE RETURN CONTINUE BREAK ELSE
 %token LEQ GEQ AND OR EQ DIFF MINUS PLUS STAR SLASH ASS
 %token LPAR RPAR LBRAC RBRAC COMMA SCOLON
 
@@ -38,6 +38,7 @@ void yyerror(const char * s) {
 %type <decvar> decvar
 %type <params> params paramlist
 %type <decfunc> decfunc
+%type <instr> instr
 
 %left OR
 %left AND
@@ -50,11 +51,11 @@ void yyerror(const char * s) {
 
 %%
 
-program     : instr
+program     : instr { program = std::make_shared<AST::Program>($1); }
             ;
-instr       : decvar instr { program.instr.push_back($1); }
-            | decfunc instr { program.instr.push_back($1); }
-            | /*empty*/
+instr       : decvar instr { $2->push_back($1); $$ = $2; }
+            | decfunc instr { $2->push_back($1); $$ = $2; }
+            | /*empty*/ { $$ = std::make_shared<std::vector<std::shared_ptr<AST::Instr>>>(); }
             ;
 decvar      : type ID SCOLON { $$ = std::make_shared<AST::DecVar>($1, $2); }
             | type ID ASS expr SCOLON { $$ = std::make_shared<AST::DecVar>($1, $2, $4); }

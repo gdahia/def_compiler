@@ -175,27 +175,8 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
 
-    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
-     *       access to the local variable yy_act. Since yyless() is a macro, it would break
-     *       existing scanners that call yyless() from OUTSIDE yylex. 
-     *       One obvious solution it to make yy_act a global. I tried that, and saw
-     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
-     *       normally declared as a register variable-- so it is not worth it.
-     */
-    #define  YY_LESS_LINENO(n) \
-            do { \
-                int yyl;\
-                for ( yyl = n; yyl < yyleng; ++yyl )\
-                    if ( yytext[yyl] == '\n' )\
-                        --yylineno;\
-            }while(0)
-    #define YY_LINENO_REWIND_TO(dst) \
-            do {\
-                const char *p;\
-                for ( p = yy_cp-1; p >= (dst); --p)\
-                    if ( *p == '\n' )\
-                        --yylineno;\
-            }while(0)
+    #define YY_LESS_LINENO(n)
+    #define YY_LINENO_REWIND_TO(ptr)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -521,12 +502,6 @@ static yyconst flex_int16_t yy_chk[134] =
        76,   76,   76
     } ;
 
-/* Table of booleans, true if rule could match eol. */
-static yyconst flex_int32_t yy_rule_can_match_eol[36] =
-    {   0,
-0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,     };
-
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
@@ -549,7 +524,7 @@ char *yytext;
 
 #include <ast.hpp>
 #include <parser.hpp>
-#line 553 "src/scanner.cpp"
+#line 528 "src/scanner.cpp"
 
 #define INITIAL 0
 
@@ -767,10 +742,10 @@ YY_DECL
 		}
 
 	{
-#line 13 "src/lex.l"
+#line 12 "src/lex.l"
 
 
-#line 774 "src/scanner.cpp"
+#line 749 "src/scanner.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -816,16 +791,6 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
-		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
-			{
-			yy_size_t yyl;
-			for ( yyl = 0; yyl < yyleng; ++yyl )
-				if ( yytext[yyl] == '\n' )
-					   
-    yylineno++;
-;
-			}
-
 do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
@@ -839,157 +804,157 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 15 "src/lex.l"
-yylval.lineno = yylineno; return DEF;
+#line 14 "src/lex.l"
+return DEF;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 17 "src/lex.l"
+#line 16 "src/lex.l"
 return IF;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 19 "src/lex.l"
+#line 18 "src/lex.l"
 return ELSE;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 21 "src/lex.l"
+#line 20 "src/lex.l"
 return WHILE;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 23 "src/lex.l"
+#line 22 "src/lex.l"
 return RETURN;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 25 "src/lex.l"
+#line 24 "src/lex.l"
 return BREAK;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 27 "src/lex.l"
+#line 26 "src/lex.l"
 return CONTINUE;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 29 "src/lex.l"
+#line 28 "src/lex.l"
 return yylval.token = INT;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 31 "src/lex.l"
+#line 30 "src/lex.l"
 return yylval.token = VOID;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 33 "src/lex.l"
+#line 32 "src/lex.l"
 yylval.lexeme = std::make_shared<std::string>(yytext, yyleng); return ID;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 35 "src/lex.l"
+#line 34 "src/lex.l"
 yylval.lexeme = std::make_shared<std::string>(yytext, yyleng); return DEC;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 37 "src/lex.l"
+#line 36 "src/lex.l"
 return LPAR;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 39 "src/lex.l"
+#line 38 "src/lex.l"
 return LBRAC;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 41 "src/lex.l"
+#line 40 "src/lex.l"
 return RBRAC;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 43 "src/lex.l"
+#line 42 "src/lex.l"
 return RPAR;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 45 "src/lex.l"
+#line 44 "src/lex.l"
 return COMMA;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 47 "src/lex.l"
+#line 46 "src/lex.l"
 return SCOLON;
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 49 "src/lex.l"
+#line 48 "src/lex.l"
 return ASS;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 51 "src/lex.l"
+#line 50 "src/lex.l"
 return EQ;
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 53 "src/lex.l"
+#line 52 "src/lex.l"
 return PLUS;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 55 "src/lex.l"
+#line 54 "src/lex.l"
 return MINUS;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 57 "src/lex.l"
+#line 56 "src/lex.l"
 return STAR;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 59 "src/lex.l"
+#line 58 "src/lex.l"
 return SLASH;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 61 "src/lex.l"
+#line 60 "src/lex.l"
 return LESS;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 63 "src/lex.l"
+#line 62 "src/lex.l"
 return LEQ;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 65 "src/lex.l"
+#line 64 "src/lex.l"
 return GREAT;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 67 "src/lex.l"
+#line 66 "src/lex.l"
 return GEQ;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 69 "src/lex.l"
+#line 68 "src/lex.l"
 return NOT;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 71 "src/lex.l"
+#line 70 "src/lex.l"
 return DIFF;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 73 "src/lex.l"
+#line 72 "src/lex.l"
 return AND;
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 75 "src/lex.l"
+#line 74 "src/lex.l"
 return OR;
 	YY_BREAK
 case 32:
@@ -997,32 +962,32 @@ case 32:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 77 "src/lex.l"
+#line 76 "src/lex.l"
 /* eat up one-line comments */
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 79 "src/lex.l"
+#line 78 "src/lex.l"
 /* eat up whitespace */
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 81 "src/lex.l"
+#line 80 "src/lex.l"
 return EOF;
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 83 "src/lex.l"
+#line 82 "src/lex.l"
 {
     throw std::runtime_error("Unrecognized token \"" + std::string(yytext) + "\" in line " + std::to_string(yylineno));
 }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 87 "src/lex.l"
+#line 86 "src/lex.l"
 ECHO;
 	YY_BREAK
-#line 1026 "src/scanner.cpp"
+#line 991 "src/scanner.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1384,10 +1349,6 @@ static int yy_get_next_buffer (void)
 
 	*--yy_cp = (char) c;
 
-    if ( c == '\n' ){
-        --yylineno;
-    }
-
 	(yytext_ptr) = yy_bp;
 	(yy_hold_char) = *yy_cp;
 	(yy_c_buf_p) = yy_cp;
@@ -1464,11 +1425,6 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
-
-	if ( c == '\n' )
-		   
-    yylineno++;
-;
 
 	return c;
 }
@@ -1936,9 +1892,6 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
-    /* We do not touch yylineno unless the option is enabled. */
-    yylineno =  1;
-    
     (yy_buffer_stack) = 0;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -2033,7 +1986,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 87 "src/lex.l"
+#line 86 "src/lex.l"
 
 
 

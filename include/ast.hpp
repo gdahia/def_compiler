@@ -6,6 +6,8 @@
 #include <string>
 #include <ostream>
 
+#include <symbol_table.hpp>
+
 namespace AST {
     class Node {
     public:
@@ -14,20 +16,32 @@ namespace AST {
         virtual void print(std::ostream &) const = 0;
     };
     
-    class Instr : public Node {};
-    
-    class Program : public Node {
+    class Instr : public Node {
     public:
-        Program() = default;
-        
-        std::vector<std::shared_ptr<Instr>> instr;
-        
-        void print(std::ostream &) const;
+        virtual void codegen(SymbolTable &) const = 0;
     };
     
-    class Stmt : public Node {};
+    class Program : public Node {
+    private:
+        const std::shared_ptr<std::vector<std::shared_ptr<Instr>>> instr;
+        SymbolTable table;
+
+    public:
+        Program(const std::shared_ptr<std::vector<std::shared_ptr<Instr>>>);
+        
+        void print(std::ostream &) const;
+        void codegen(SymbolTable &) const;
+    };
     
-    class Expr : public Stmt {};
+    class Stmt : public Node {
+    public:
+        virtual void codegen(SymbolTable &) const;
+    };
+    
+    class Expr : public Stmt {
+    public:
+        virtual void codegen(SymbolTable &) const = 0;
+    };
     
     class Block;
     
@@ -51,10 +65,12 @@ namespace AST {
         DecVar(const int, const std::shared_ptr<std::string>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
+        void codegen(SymbolTable &) const;
     };
     
     class DecFunc : public Instr {
     private:
+        const int type;
         const std::shared_ptr<std::string> name;
         const std::shared_ptr<std::vector<Param>> paramlist;
         const std::shared_ptr<Block> block;
@@ -64,6 +80,7 @@ namespace AST {
         DecFunc(const int, const std::shared_ptr<std::string>, const std::shared_ptr<Block>);
         
         void print(std::ostream &) const;
+        void codegen(SymbolTable &) const;
     };
     
     class Block : public Node {
@@ -77,6 +94,7 @@ namespace AST {
         void print(std::ostream &) const;
         bool has_int_return() const;
         bool has_void_return() const;
+        void codegen(SymbolTable &) const;
     };
     
     class Assign : public Stmt {
@@ -100,6 +118,7 @@ namespace AST {
         If(const std::shared_ptr<Expr>, const std::shared_ptr<Block>, const std::shared_ptr<Block>);
         
         void print(std::ostream &) const;
+        void codegen(SymbolTable &) const;
     };
     
     class While : public Stmt {
@@ -111,6 +130,7 @@ namespace AST {
         While(const std::shared_ptr<Expr>, const std::shared_ptr<Block>);
         
         void print(std::ostream &) const;
+        void codegen(SymbolTable &) const;
     };
     
     class Return : public Stmt {
@@ -123,6 +143,7 @@ namespace AST {
         
         void print(std::ostream &) const;
         bool has_val() const;
+        void codegen(SymbolTable &) const;
     };
     
     class Continue : public Stmt {
@@ -135,140 +156,118 @@ namespace AST {
         void print(std::ostream &) const;
     };
     
-    class Add : public Expr {
-    private:
+    class BinOp : public Expr {
+    protected:
         const std::shared_ptr<Expr> left, right;
     
+    public:
+        BinOp(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
+        virtual void print(std::ostream &) const;
+        virtual void codegen(SymbolTable &) const;
+    };
+    
+    class Add : public BinOp {
     public:
         Add(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
     };
     
-    class Sub : public Expr {
-    private:
-        const std::shared_ptr<Expr> left, right;
-    
+    class Sub : public BinOp {
     public:
         Sub(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
     };
     
-    class Times : public Expr {
-    private:
-        const std::shared_ptr<Expr> left, right;
-    
+    class Times : public BinOp {
     public:
         Times(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
     };
     
-    class Div : public Expr {
-    private:
-        const std::shared_ptr<Expr> left, right;
-    
+    class Div : public BinOp {
     public:
         Div(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
     };
     
-    class Less : public Expr {
-    private:
-        const std::shared_ptr<Expr> left, right;
-    
+    class Less : public BinOp {
     public:
         Less(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
     };
     
-    class Leq : public Expr {
-    private:
-        const std::shared_ptr<Expr> left, right;
-    
+    class Leq : public BinOp {
     public:
         Leq(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
     };
     
-    class Great : public Expr {
-    private:
-        const std::shared_ptr<Expr> left, right;
-    
+    class Great : public BinOp {
     public:
         Great(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
     };
     
-    class Geq : public Expr {
-    private:
-        const std::shared_ptr<Expr> left, right;
-    
+    class Geq : public BinOp {
     public:
         Geq(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
     };
     
-    class Eq : public Expr {
-    private:
-        const std::shared_ptr<Expr> left, right;
-    
+    class Eq : public BinOp {
     public:
         Eq(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
     };
     
-    class Diff : public Expr {
-    private:
-        const std::shared_ptr<Expr> left, right;
-    
+    class Diff : public BinOp {
     public:
         Diff(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
     };
     
-    class And : public Expr {
-    private:
-        const std::shared_ptr<Expr> left, right;
-    
+    class And : public BinOp {
     public:
         And(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
     };
     
-    class Or : public Expr {
-    private:
-        const std::shared_ptr<Expr> left, right;
-    
+    class Or : public BinOp {
     public:
         Or(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
     };
     
-    class Not : public Expr {
-    private:
+    class UnOp : public Expr {
+    protected:
         const std::shared_ptr<Expr> expr;
     
+    public:
+        UnOp(const std::shared_ptr<Expr>);
+        virtual void print(std::ostream &) const;
+        virtual void codegen(SymbolTable &) const;
+    };
+    
+    class Not : public UnOp {
     public:
         Not(const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
     };
     
-    class Opp : public Expr {
-    private:
-        const std::shared_ptr<Expr> expr;
-    
+    class Opp : public UnOp {
     public:
         Opp(const std::shared_ptr<Expr>);
         
@@ -277,12 +276,13 @@ namespace AST {
     
     class Number : public Expr {
     private:
-        const long long val;
+        const int val;
     
     public:
         Number(const std::shared_ptr<std::string>);
         
         void print(std::ostream &) const;
+        void codegen(SymbolTable &) const;
     };
     
     class Var : public Expr {
@@ -293,6 +293,7 @@ namespace AST {
         Var(const std::shared_ptr<std::string>);
         
         void print(std::ostream &) const;
+        void codegen(SymbolTable &) const;
     };
     
     class FuncCall : public Expr {
@@ -305,6 +306,8 @@ namespace AST {
         FuncCall(const std::shared_ptr<std::string>, const std::shared_ptr<std::vector<std::shared_ptr<Expr>>>);
         
         void print(std::ostream &) const;
+        const std::string & get_name() const;
+        void codegen(SymbolTable &) const;
     };
     
 };
