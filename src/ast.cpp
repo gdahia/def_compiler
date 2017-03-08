@@ -138,7 +138,13 @@ void Var::print(std::ostream & os) const {
 }
 
 void FuncCall::print(std::ostream & os) const {
-    os << "[" << *name;
+    os << "[funccall [" << *name << "]";
+    if (args) {
+        os << "[arglist";
+        for (auto arg = args->rbegin(); arg != args->rend(); arg++)
+            os << " " << **arg;
+        os << "]";
+    }
 }
 
 Param::Param(const int type, const std::shared_ptr<std::string> name) : name(name) {
