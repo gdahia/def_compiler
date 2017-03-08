@@ -8,6 +8,7 @@
 %}
 
 %option noyywrap
+%option yylineno
 
 %%
 
@@ -80,8 +81,7 @@
 <<EOF>> return EOF;
 
 . {
-    std::cerr << "Error: unrecognized token " << yytext << std::endl;
-    yyterminate();
+    throw std::runtime_error("Unrecognized token \"" + std::string(yytext) + "\" in line " + std::to_string(yylineno));
 }
 
 %%
