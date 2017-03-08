@@ -140,7 +140,7 @@ void Var::print(std::ostream & os) const {
 void FuncCall::print(std::ostream & os) const {
     os << "[funccall [" << *name << "]";
     if (args) {
-        os << "[arglist";
+        os << " [arglist";
         for (auto arg = args->rbegin(); arg != args->rend(); arg++)
             os << " " << **arg;
         os << "]";
