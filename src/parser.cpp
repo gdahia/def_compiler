@@ -467,12 +467,12 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    52,    52,    54,    55,    56,    58,    59,    61,    62,
-      64,    66,    67,    69,    71,    72,    74,    75,    77,    78,
-      79,    80,    81,    82,    83,    84,    86,    87,    89,    91,
-      92,    94,    96,    97,    99,   100,   101,   102,   103,   104,
-     105,   106,   107,   108,   109,   110,   111,   112,   113,   114,
-     115,   116,   118,   119
+       0,    53,    53,    55,    56,    57,    59,    60,    62,    63,
+      65,    67,    68,    70,    72,    73,    75,    76,    78,    79,
+      80,    81,    82,    83,    84,    85,    87,    88,    90,    92,
+      93,    95,    97,    98,   100,   101,   102,   103,   104,   105,
+     106,   107,   108,   109,   110,   111,   112,   113,   114,   115,
+     116,   117,   119,   120
 };
 #endif
 
@@ -1338,301 +1338,301 @@ yyreduce:
   switch (yyn)
     {
         case 3:
-#line 54 "src/grammar.y" /* yacc.c:1646  */
+#line 55 "src/grammar.y" /* yacc.c:1646  */
     { program.instr.push_back((yyvsp[-1].decvar)); }
 #line 1344 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 55 "src/grammar.y" /* yacc.c:1646  */
+#line 56 "src/grammar.y" /* yacc.c:1646  */
     { program.instr.push_back((yyvsp[-1].decfunc)); }
 #line 1350 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 58 "src/grammar.y" /* yacc.c:1646  */
+#line 59 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.decvar) = std::make_shared<AST::DecVar>((yyvsp[-2].token), (yyvsp[-1].lexeme)); }
 #line 1356 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 59 "src/grammar.y" /* yacc.c:1646  */
+#line 60 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.decvar) = std::make_shared<AST::DecVar>((yyvsp[-4].token), (yyvsp[-3].lexeme), (yyvsp[-1].expr)); }
 #line 1362 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 61 "src/grammar.y" /* yacc.c:1646  */
+#line 62 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.decfunc) = std::make_shared<AST::DecFunc>((yyvsp[-5].token), (yyvsp[-4].lexeme), (yyvsp[-2].params), (yyvsp[0].block)); }
 #line 1368 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 62 "src/grammar.y" /* yacc.c:1646  */
+#line 63 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.decfunc) = std::make_shared<AST::DecFunc>((yyvsp[-4].token), (yyvsp[-3].lexeme), (yyvsp[0].block)); }
 #line 1374 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 64 "src/grammar.y" /* yacc.c:1646  */
+#line 65 "src/grammar.y" /* yacc.c:1646  */
     { (yyvsp[0].params)->emplace_back((yyvsp[-2].token), (yyvsp[-1].lexeme)); (yyval.params) = (yyvsp[0].params); }
 #line 1380 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 66 "src/grammar.y" /* yacc.c:1646  */
+#line 67 "src/grammar.y" /* yacc.c:1646  */
     { (yyvsp[0].params)->emplace_back((yyvsp[-2].token), (yyvsp[-1].lexeme)); (yyval.params) = (yyvsp[0].params); }
 #line 1386 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 67 "src/grammar.y" /* yacc.c:1646  */
+#line 68 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.params) = std::make_shared<std::vector<AST::Param>>(); }
 #line 1392 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 69 "src/grammar.y" /* yacc.c:1646  */
+#line 70 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.block) = std::make_shared<AST::Block>((yyvsp[-2].decvars), (yyvsp[-1].stmts)); }
 #line 1398 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 71 "src/grammar.y" /* yacc.c:1646  */
+#line 72 "src/grammar.y" /* yacc.c:1646  */
     { (yyvsp[0].decvars)->push_back((yyvsp[-1].decvar)); (yyval.decvars) = (yyvsp[0].decvars); }
 #line 1404 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 72 "src/grammar.y" /* yacc.c:1646  */
+#line 73 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.decvars) = std::make_shared<std::vector<std::shared_ptr<AST::DecVar>>>(); }
 #line 1410 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 74 "src/grammar.y" /* yacc.c:1646  */
+#line 75 "src/grammar.y" /* yacc.c:1646  */
     { (yyvsp[0].stmts)->push_back((yyvsp[-1].stmt)); (yyval.stmts) = (yyvsp[0].stmts); }
 #line 1416 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 75 "src/grammar.y" /* yacc.c:1646  */
+#line 76 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.stmts) = std::make_shared<std::vector<std::shared_ptr<AST::Stmt>>>(); }
 #line 1422 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 77 "src/grammar.y" /* yacc.c:1646  */
+#line 78 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.stmt) = (yyvsp[-1].stmt); }
 #line 1428 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 78 "src/grammar.y" /* yacc.c:1646  */
+#line 79 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.stmt) = std::make_shared<AST::If>((yyvsp[-2].expr), (yyvsp[0].block)); }
 #line 1434 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 79 "src/grammar.y" /* yacc.c:1646  */
+#line 80 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.stmt) = std::make_shared<AST::If>((yyvsp[-4].expr), (yyvsp[-2].block), (yyvsp[0].block)); }
 #line 1440 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 80 "src/grammar.y" /* yacc.c:1646  */
+#line 81 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.stmt) = std::make_shared<AST::While>((yyvsp[-2].expr), (yyvsp[0].block)); }
 #line 1446 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 81 "src/grammar.y" /* yacc.c:1646  */
+#line 82 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.stmt) = std::make_shared<AST::Return>((yyvsp[-1].expr)); }
 #line 1452 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 82 "src/grammar.y" /* yacc.c:1646  */
+#line 83 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.stmt) = std::make_shared<AST::Return>(); }
 #line 1458 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 83 "src/grammar.y" /* yacc.c:1646  */
+#line 84 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.stmt) = std::make_shared<AST::Break>(); }
 #line 1464 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 84 "src/grammar.y" /* yacc.c:1646  */
+#line 85 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.stmt) = std::make_shared<AST::Continue>(); }
 #line 1470 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 86 "src/grammar.y" /* yacc.c:1646  */
+#line 87 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.stmt) = (yyvsp[0].stmt); }
 #line 1476 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 87 "src/grammar.y" /* yacc.c:1646  */
+#line 88 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.stmt) = (yyvsp[0].funccall); }
 #line 1482 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 89 "src/grammar.y" /* yacc.c:1646  */
+#line 90 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.stmt) = std::make_shared<AST::Assign>((yyvsp[-2].lexeme), (yyvsp[0].expr)); }
 #line 1488 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 91 "src/grammar.y" /* yacc.c:1646  */
+#line 92 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.funccall) = std::make_shared<AST::FuncCall>((yyvsp[-3].lexeme), (yyvsp[-1].args)); }
 #line 1494 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 92 "src/grammar.y" /* yacc.c:1646  */
+#line 93 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.funccall) = std::make_shared<AST::FuncCall>((yyvsp[-2].lexeme)); }
 #line 1500 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 94 "src/grammar.y" /* yacc.c:1646  */
+#line 95 "src/grammar.y" /* yacc.c:1646  */
     { (yyvsp[0].args)->push_back((yyvsp[-1].expr)); (yyval.args) = (yyvsp[0].args); }
 #line 1506 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 96 "src/grammar.y" /* yacc.c:1646  */
+#line 97 "src/grammar.y" /* yacc.c:1646  */
     { (yyvsp[0].args)->push_back((yyvsp[-1].expr)); (yyval.args) = (yyvsp[0].args); }
 #line 1512 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 97 "src/grammar.y" /* yacc.c:1646  */
+#line 98 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.args) = std::make_shared<std::vector<std::shared_ptr<AST::Expr>>>(); }
 #line 1518 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 99 "src/grammar.y" /* yacc.c:1646  */
+#line 100 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Add>((yyvsp[-2].expr), (yyvsp[0].expr)); }
 #line 1524 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 100 "src/grammar.y" /* yacc.c:1646  */
+#line 101 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Sub>((yyvsp[-2].expr), (yyvsp[0].expr)); }
 #line 1530 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 101 "src/grammar.y" /* yacc.c:1646  */
+#line 102 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Times>((yyvsp[-2].expr), (yyvsp[0].expr)); }
 #line 1536 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 102 "src/grammar.y" /* yacc.c:1646  */
+#line 103 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Div>((yyvsp[-2].expr), (yyvsp[0].expr)); }
 #line 1542 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 103 "src/grammar.y" /* yacc.c:1646  */
+#line 104 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Less>((yyvsp[-2].expr), (yyvsp[0].expr)); }
 #line 1548 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 104 "src/grammar.y" /* yacc.c:1646  */
+#line 105 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Leq>((yyvsp[-2].expr), (yyvsp[0].expr)); }
 #line 1554 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 105 "src/grammar.y" /* yacc.c:1646  */
+#line 106 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Great>((yyvsp[-2].expr), (yyvsp[0].expr)); }
 #line 1560 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 106 "src/grammar.y" /* yacc.c:1646  */
+#line 107 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Geq>((yyvsp[-2].expr), (yyvsp[0].expr)); }
 #line 1566 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 107 "src/grammar.y" /* yacc.c:1646  */
+#line 108 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Eq>((yyvsp[-2].expr), (yyvsp[0].expr)); }
 #line 1572 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 108 "src/grammar.y" /* yacc.c:1646  */
+#line 109 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Diff>((yyvsp[-2].expr), (yyvsp[0].expr)); }
 #line 1578 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 109 "src/grammar.y" /* yacc.c:1646  */
+#line 110 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::And>((yyvsp[-2].expr), (yyvsp[0].expr)); }
 #line 1584 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 110 "src/grammar.y" /* yacc.c:1646  */
+#line 111 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Or>((yyvsp[-2].expr), (yyvsp[0].expr)); }
 #line 1590 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 111 "src/grammar.y" /* yacc.c:1646  */
+#line 112 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Opp>((yyvsp[0].expr)); }
 #line 1596 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 112 "src/grammar.y" /* yacc.c:1646  */
+#line 113 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Not>((yyvsp[0].expr)); }
 #line 1602 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 113 "src/grammar.y" /* yacc.c:1646  */
+#line 114 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = (yyvsp[-1].expr); }
 #line 1608 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 114 "src/grammar.y" /* yacc.c:1646  */
+#line 115 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = (yyvsp[0].funccall); }
 #line 1614 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 115 "src/grammar.y" /* yacc.c:1646  */
+#line 116 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Number>((yyvsp[0].lexeme)); }
 #line 1620 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 116 "src/grammar.y" /* yacc.c:1646  */
+#line 117 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.expr) = std::make_shared<AST::Var>((yyvsp[0].lexeme)); }
 #line 1626 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 118 "src/grammar.y" /* yacc.c:1646  */
+#line 119 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.token) = (yyvsp[0].token); }
 #line 1632 "src/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 119 "src/grammar.y" /* yacc.c:1646  */
+#line 120 "src/grammar.y" /* yacc.c:1646  */
     { (yyval.token) = (yyvsp[0].token); }
 #line 1638 "src/parser.cpp" /* yacc.c:1646  */
     break;
@@ -1866,5 +1866,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 121 "src/grammar.y" /* yacc.c:1906  */
+#line 122 "src/grammar.y" /* yacc.c:1906  */
 

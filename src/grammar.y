@@ -22,7 +22,8 @@ void yyerror(const char * s) {
 
 %token <token> INT VOID
 %token <lexeme> ID DEC
-%token DEF IF WHILE RETURN CONTINUE BREAK ELSE
+%token <lineno> DEF
+%token IF WHILE RETURN CONTINUE BREAK ELSE
 %token LEQ GEQ AND OR EQ DIFF MINUS PLUS STAR SLASH ASS
 %token LPAR RPAR LBRAC RBRAC COMMA SCOLON
 

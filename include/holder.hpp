@@ -18,6 +18,7 @@ struct Holder {
     std::shared_ptr<AST::DecFunc> decfunc;
     std::shared_ptr<std::string> lexeme;
     int token;
+    unsigned int lineno;
 };
 
 #endif

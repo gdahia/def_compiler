@@ -12,7 +12,7 @@
 
 %%
 
-"def" return DEF;
+"def" yylval.lineno = yylineno; return DEF;
 
 "if" return IF;
 
