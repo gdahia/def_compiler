@@ -1,4 +1,0 @@
-def int main() {
-    for (int noob : {bira, vidal, pinho, felipe, bruno})
-        print(noob);
-}

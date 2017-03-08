@@ -1,5 +1,0 @@
-def int main() {
-    if (a != b && c != d || a &= b) {
-        print(1);
-    }
-}
