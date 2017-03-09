@@ -50,7 +50,7 @@ bool SymbolTable::can_be_expr(const std::string & name) {
         if (f->second == INT)
             return true;
         else
-            throw std::runtime_error("Function \"" + name + "\" does not return \"int\", as it was declared \"void\"");
+            throw std::runtime_error("Function \"" + name + "\" does not return \"int\", as it was previously declared \"void\"");
     }
     else
         throw std::runtime_error("Function \"" + name + "\" was not declared");

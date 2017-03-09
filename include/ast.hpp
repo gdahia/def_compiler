@@ -35,7 +35,7 @@ namespace AST {
     
     class Stmt : public Node {
     public:
-        virtual void codegen(SymbolTable &) const;
+        virtual void codegen(SymbolTable &) const = 0;
     };
     
     class Expr : public Stmt {
@@ -53,7 +53,7 @@ namespace AST {
         Param(const int, const std::shared_ptr<std::string>);
         
         void print(std::ostream &) const;
-        const std::string & get_name() const;
+        std::shared_ptr<std::string> get_name() const;
     };
     
     class DecVar : public Instr {
@@ -96,6 +96,7 @@ namespace AST {
         bool has_int_return() const;
         bool has_void_return() const;
         void codegen(SymbolTable &) const;
+        void codegen(SymbolTable &, const std::shared_ptr<std::vector<Param>>) const;
     };
     
     class Assign : public Stmt {
@@ -151,11 +152,13 @@ namespace AST {
     class Continue : public Stmt {
     public:
         void print(std::ostream &) const;
+        void codegen(SymbolTable &) const;
     };
     
     class Break : public Stmt {
     public:
         void print(std::ostream &) const;
+        void codegen(SymbolTable &) const;
     };
     
     class BinOp : public Expr {

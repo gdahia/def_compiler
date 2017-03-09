@@ -15,13 +15,15 @@ void Program::print(std::ostream & os) const {
     os << "]";
 }
 
-void Stmt::codegen(SymbolTable & table) const {}
-
 Program::Program(const std::shared_ptr<std::vector<std::shared_ptr<Instr>>> instr) : instr(instr) {
     codegen(table);
     
     table.func_lookup("main");
 }
+
+void Continue::codegen(SymbolTable & table) const {}
+
+void Break::codegen(SymbolTable & table) const {}
 
 void Number::codegen(SymbolTable & table) const {}
 
@@ -61,18 +63,16 @@ void DecVar::codegen(SymbolTable & table) const {
     }
 }
 
-const std::string & Param::get_name() const {
-    return *name;
+std::shared_ptr<std::string> Param::get_name() const {
+    return name;
 }
 
 void DecFunc::codegen(SymbolTable & table) const {
     table.add_func(type, *name);
-    table.add_scope();
     if (paramlist)
-        for (auto param = paramlist->rbegin(); param != paramlist->rend(); param++)
-            table.add_var(param->get_name());
-    block->codegen(table);
-    table.pop_scope();
+        block->codegen(table, paramlist);
+    else
+        block->codegen(table);
 }
 
 void Block::codegen(SymbolTable & table) const {
@@ -82,6 +82,14 @@ void Block::codegen(SymbolTable & table) const {
     for (auto i = stmts->rbegin(); i != stmts->rend(); i++)
         (*i)->codegen(table);
     table.pop_scope();
+}
+
+void Block::codegen(SymbolTable & table, const std::shared_ptr<std::vector<Param>> paramlist) const {
+    for (const Param & param : *paramlist)
+        vars->push_back(std::make_shared<DecVar>(INT, param.get_name()));
+    codegen(table);
+    for (int i = 0, len = paramlist->size(); i < len; i++)
+        vars->pop_back();
 }
 
 void If::codegen(SymbolTable & table) const {
@@ -278,24 +286,24 @@ void FuncCall::print(std::ostream & os) const {
 
 Param::Param(const int type, const std::shared_ptr<std::string> name) : name(name) {
     if (type == VOID)
-        throw std::runtime_error("Parameter " + *name + " declared \'void\'");
+        throw std::runtime_error("Parameter \"" + *name + "\" declared \'void\'");
 }
 
 DecVar::DecVar(const int type, const std::shared_ptr<std::string> name) : name(name) {
     if (type == VOID)
-        throw std::runtime_error("Variable " + *name + " declared \'void\'");
+        throw std::runtime_error("Variable \"" + *name + "\" declared \'void\'");
 }
 
 DecVar::DecVar(const int type, const std::shared_ptr<std::string> name, const std::shared_ptr<Expr> rhs) : name(name), rhs(rhs) {
     if (type == VOID)
-        throw std::runtime_error("Variable " + *name + " declared \'void\'");
+        throw std::runtime_error("Variable \"" + *name + "\" declared \'void\'");
 }
 
 DecFunc::DecFunc(const int type, const std::shared_ptr<std::string> name, const std::shared_ptr<std::vector<Param>> paramlist, const std::shared_ptr<Block> block) : type(type), name(name), paramlist(paramlist), block(block) {
     if (type == VOID && block->has_int_return())
-        throw std::runtime_error("Function " + *name + " has type \'void\' but returns an \'int\'");
+        throw std::runtime_error("Function \"" + *name + "\" has type \'void\' but returns an \'int\'");
     if (type == INT && block->has_void_return())
-        throw std::runtime_error("Function " + *name + " has type \'int\' but returns no \'int\'");
+        throw std::runtime_error("Function \"" + *name + "\" has type \'int\' but returns no \'int\'");
 }
 
 bool Block::has_int_return() const {
@@ -320,9 +328,9 @@ bool Return::has_val() const {
 
 DecFunc::DecFunc(const int type, const std::shared_ptr<std::string> name, const std::shared_ptr<Block> block) : type(type), name(name), block(block) {
     if (type == VOID && block->has_int_return())
-        throw std::runtime_error("Function " + *name + " has type \'void\' but returns an \'int\'");
+        throw std::runtime_error("Function \"" + *name + "\" has type \'void\' but returns an \'int\'");
     if (type == INT && block->has_void_return())
-        throw std::runtime_error("Function " + *name + " has type \'int\' but returns no \'int\'");
+        throw std::runtime_error("Function \"" + *name + "\" has type \'int\' but returns no \'int\'");
 }
 
 Block::Block(const std::shared_ptr<std::vector<std::shared_ptr<DecVar>>> vars, const std::shared_ptr<std::vector<std::shared_ptr<Stmt>>> stmts) : vars(vars), stmts(stmts) {}    
