@@ -23,25 +23,25 @@ void SymbolTable::pop_scope() {
 
 void SymbolTable::add_var(const std::string & name) {
     if (!decvar.back().insert(name).second)
-        throw std::runtime_error("Redefinition of variable \"" + name + "\".");
+        throw std::runtime_error("Redefinition of variable \"" + name + "\"");
 }
 
 void SymbolTable::add_func(const int type, const std::string & name) {
     if (!decfunc.emplace(name, type).second)
-        throw std::runtime_error("Redefintion of function \"" + name + "\".");
+        throw std::runtime_error("Redefintion of function \"" + name + "\"");
 }
 
 bool SymbolTable::var_lookup(const std::string & name) {
     for (auto i = decvar.rbegin(); i != decvar.rend(); i++)
         if (i->count(name))
             return true;
-    throw std::runtime_error("Undeclared variable \"" + name + "\".");
+    throw std::runtime_error("Variable \"" + name + "\" was not declared");
 }
 
 bool SymbolTable::func_lookup(const std::string & name) {
     if (decfunc.count(name))
         return true;
-    throw std::runtime_error("Undeclared function \"" + name + "\".");
+    throw std::runtime_error("Function \"" + name + "\" was not declared");
 }
 
 bool SymbolTable::can_be_expr(const std::string & name) {
@@ -50,8 +50,8 @@ bool SymbolTable::can_be_expr(const std::string & name) {
         if (f->second == INT)
             return true;
         else
-            throw std::runtime_error("Function \"" + name + " does not return \"int\", as it is previously declared \"void\".");
+            throw std::runtime_error("Function \"" + name + " does not return \"int\", as it is previously declared \"void\"");
     }
     else
-        throw std::runtime_error("Undeclared function \"" + name + "\".");
+        throw std::runtime_error("Function \"" + name + "\" was not declared");
 }
