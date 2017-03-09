@@ -29,6 +29,13 @@ void Var::codegen(SymbolTable & table) const {
     table.var_lookup(*name);
 }
 
+void Assign::codegen(SymbolTable & table) const {
+    table.var_lookup(*lhs);
+    if (FuncCall * func = dynamic_cast<FuncCall *>(rhs.get()))
+        table.can_be_expr(func->get_name());
+    rhs->codegen(table);
+}
+
 void FuncCall::codegen(SymbolTable & table) const {
     table.func_lookup(*name);
     if (args)
@@ -47,8 +54,11 @@ void Program::codegen(SymbolTable & table) const {
 
 void DecVar::codegen(SymbolTable & table) const {
     table.add_var(*name);
-    if (rhs)
+    if (rhs) {
+        if (FuncCall * func = dynamic_cast<FuncCall *>(rhs.get()))
+            table.can_be_expr(func->get_name());
         rhs->codegen(table);
+    }
 }
 
 const std::string & Param::get_name() const {

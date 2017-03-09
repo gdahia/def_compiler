@@ -107,6 +107,7 @@ namespace AST {
         Assign(const std::shared_ptr<std::string>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
+        void codegen(SymbolTable &) const;
     };
     
     class If : public Stmt {
