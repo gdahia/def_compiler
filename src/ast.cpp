@@ -85,18 +85,26 @@ void Block::codegen(SymbolTable & table) const {
 }
 
 void If::codegen(SymbolTable & table) const {
+    if (FuncCall * func = dynamic_cast<FuncCall *>(expr.get()))
+        table.can_be_expr(func->get_name());
     expr->codegen(table);
     if_block->codegen(table);
     if (else_block) else_block->codegen(table);
 }
 
 void While::codegen(SymbolTable & table) const {
+    if (FuncCall * func = dynamic_cast<FuncCall *>(expr.get()))
+        table.can_be_expr(func->get_name());
     expr->codegen(table);
     block->codegen(table);
 }
 
 void Return::codegen(SymbolTable & table) const {
-    if (expr) expr->codegen(table);
+    if (expr) {
+        if (FuncCall * func = dynamic_cast<FuncCall *>(expr.get()))
+            table.can_be_expr(func->get_name());
+        expr->codegen(table);
+    }
 }
 
 void BinOp::codegen(SymbolTable & table) const {
