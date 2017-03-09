@@ -53,6 +53,7 @@ namespace AST {
         Param(const int, const std::shared_ptr<std::string>);
         
         void print(std::ostream &) const;
+        const std::string & get_name() const;
     };
     
     class DecVar : public Instr {

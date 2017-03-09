@@ -19,6 +19,8 @@ void Stmt::codegen(SymbolTable & table) const {}
 
 Program::Program(const std::shared_ptr<std::vector<std::shared_ptr<Instr>>> instr) : instr(instr) {
     codegen(table);
+    
+    table.func_lookup("main");
 }
 
 void Number::codegen(SymbolTable & table) const {}
@@ -49,9 +51,18 @@ void DecVar::codegen(SymbolTable & table) const {
         rhs->codegen(table);
 }
 
+const std::string & Param::get_name() const {
+    return *name;
+}
+
 void DecFunc::codegen(SymbolTable & table) const {
     table.add_func(type, *name);
+    table.add_scope();
+    if (paramlist)
+        for (auto param = paramlist->rbegin(); param != paramlist->rend(); param++)
+            table.add_var(param->get_name());
     block->codegen(table);
+    table.pop_scope();
 }
 
 void Block::codegen(SymbolTable & table) const {
