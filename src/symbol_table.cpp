@@ -6,6 +6,9 @@
 SymbolTable::SymbolTable() {
     // add global scope
     add_scope();
+    
+    // define print unconditionally
+    add_func(VOID, "print");
 }
 
 void SymbolTable::add_scope() {
