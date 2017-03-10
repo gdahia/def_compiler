@@ -304,6 +304,24 @@ DecFunc::DecFunc(const int type, const std::shared_ptr<std::string> name, const 
         throw std::runtime_error("Function \"" + *name + "\" has type \'void\' but returns an \'int\'");
     if (type == INT && block->has_void_return())
         throw std::runtime_error("Function \"" + *name + "\" has type \'int\' but returns no \'int\'");
+    if (block->has_break())
+        throw std::runtime_error("Break statement not within loop");
+    if (block->has_continue())
+        throw std::runtime_error("Continue statement not within loop");
+}
+
+bool Block::has_continue() const {
+    for (auto stmt = stmts->rbegin(); stmt != stmts->rend(); stmt++)
+        if (nullptr != dynamic_cast<Continue *>(stmt->get()))
+            return true;
+    return false;
+}
+
+bool Block::has_break() const {
+    for (auto stmt = stmts->rbegin(); stmt != stmts->rend(); stmt++)
+        if (nullptr != dynamic_cast<Break *>(stmt->get()))
+            return true;
+    return false;
 }
 
 bool Block::has_int_return() const {
@@ -331,15 +349,34 @@ DecFunc::DecFunc(const int type, const std::shared_ptr<std::string> name, const 
         throw std::runtime_error("Function \"" + *name + "\" has type \'void\' but returns an \'int\'");
     if (type == INT && block->has_void_return())
         throw std::runtime_error("Function \"" + *name + "\" has type \'int\' but returns no \'int\'");
+    if (block->has_break())
+        throw std::runtime_error("Break statement not within loop");
+    if (block->has_continue())
+        throw std::runtime_error("Continue statement not within loop");
 }
 
 Block::Block(const std::shared_ptr<std::vector<std::shared_ptr<DecVar>>> vars, const std::shared_ptr<std::vector<std::shared_ptr<Stmt>>> stmts) : vars(vars), stmts(stmts) {}    
 
 Assign::Assign(const std::shared_ptr<std::string> lhs, const std::shared_ptr<Expr> rhs) : lhs(lhs), rhs(rhs) {}    
 
-If::If(const std::shared_ptr<Expr> expr, const std::shared_ptr<Block> if_block) : expr(expr), if_block(if_block) {}
+If::If(const std::shared_ptr<Expr> expr, const std::shared_ptr<Block> if_block) : expr(expr), if_block(if_block) {
+    if (if_block->has_break())
+        throw std::runtime_error("Break statement not within loop");
+    if (if_block->has_continue())
+        throw std::runtime_error("Continue statement not within loop");
+}
 
-If::If(const std::shared_ptr<Expr> expr, const std::shared_ptr<Block> if_block, const std::shared_ptr<Block> else_block) : expr(expr), if_block(if_block), else_block(else_block) {}    
+If::If(const std::shared_ptr<Expr> expr, const std::shared_ptr<Block> if_block, const std::shared_ptr<Block> else_block) : expr(expr), if_block(if_block), else_block(else_block) {
+    if (if_block->has_break())
+        throw std::runtime_error("Break statement not within loop");
+    if (if_block->has_continue())
+        throw std::runtime_error("Continue statement not within loop");
+    
+    if (else_block->has_break())
+        throw std::runtime_error("Break statement not within loop");
+    if (else_block->has_continue())
+        throw std::runtime_error("Continue statement not within loop");
+}    
 
 While::While(const std::shared_ptr<Expr> expr, const std::shared_ptr<Block> block) : expr(expr), block(block) {}
 
