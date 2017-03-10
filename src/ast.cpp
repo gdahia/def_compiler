@@ -170,7 +170,7 @@ void Break::print(std::ostream & os) const {
 }
 
 void While::print(std::ostream & os) const {
-    os << "[while " << *expr << " " << *block;
+    os << "[while " << *expr << " " << *block << "]";
 }
 
 void DecVar::print(std::ostream & os) const {
@@ -275,13 +275,12 @@ void Var::print(std::ostream & os) const {
 }
 
 void FuncCall::print(std::ostream & os) const {
-    os << "[funccall [" << *name << "]";
+    os << "[funccall [" << *name << "] [arglist";
     if (args) {
-        os << " [arglist";
         for (auto arg = args->rbegin(); arg != args->rend(); arg++)
             os << " " << **arg;
-        os << "]";
     }
+    os << "]]";
 }
 
 Param::Param(const int type, const std::shared_ptr<std::string> name) : name(name) {
