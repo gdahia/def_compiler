@@ -1,0 +1,9 @@
+def void f() {
+    int a;
+}
+
+def int main() {
+    int a = 3;
+    f();
+    int b = 4;
+}

@@ -1,0 +1,7 @@
+def int main() {
+    int a;
+    if (a == 2) {
+        print(a);
+    }
+    else {}
+}

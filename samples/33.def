@@ -1,0 +1,7 @@
+def void print() {
+    int a = 3;
+}
+
+def int main() {
+    int b = 4;
+}
