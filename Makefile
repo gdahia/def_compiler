@@ -18,6 +18,9 @@ build/parser.o: src/parser.cpp include/parser.hpp include/ast.hpp include/holder
 build/symbol_table.o: src/symbol_table.cpp include/symbol_table.hpp include/parser.hpp include/ast.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
+build/ast.o: src/ast.cpp include/ast.hpp include/symbol_table.hpp include/parser.hpp
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
 src/scanner.cpp: src/lex.l
 	lex -o $@ $<
 
