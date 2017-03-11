@@ -88,14 +88,15 @@ namespace AST {
     private:
         const std::shared_ptr<std::vector<std::shared_ptr<DecVar>>> vars;
         const std::shared_ptr<std::vector<std::shared_ptr<Stmt>>> stmts;
+        
+        bool has_continue() const;
+        bool has_break() const;
     
     public:
         Block(const std::shared_ptr<std::vector<std::shared_ptr<DecVar>>>, const std::shared_ptr<std::vector<std::shared_ptr<Stmt>>>);
         
         bool has_int_return() const;
         bool has_void_return() const;
-        bool has_continue() const;
-        bool has_break() const;
         
         void print(std::ostream &) const;
         void codegen(SymbolTable &) const;

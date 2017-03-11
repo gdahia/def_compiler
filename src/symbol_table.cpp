@@ -9,10 +9,24 @@ SymbolTable::SymbolTable() {
     
     // define print unconditionally
     add_func(VOID, "print");
+    
+    whiles = 0;
 }
 
 void SymbolTable::add_scope() {
     decvar.push_back(std::unordered_set<std::string>());
+}
+
+void SymbolTable::add_while() {
+    whiles++;
+}
+
+void SymbolTable::pop_while() {
+    whiles--;
+}
+
+bool SymbolTable::inside_while() const {
+    return whiles > 0;
 }
 
 void SymbolTable::pop_scope() {
@@ -31,20 +45,20 @@ void SymbolTable::add_func(const int type, const std::string & name) {
         throw std::runtime_error("Redefintion of function \"" + name + "\"");
 }
 
-bool SymbolTable::var_lookup(const std::string & name) {
+bool SymbolTable::var_lookup(const std::string & name) const {
     for (auto i = decvar.rbegin(); i != decvar.rend(); i++)
         if (i->count(name))
             return true;
     throw std::runtime_error("Variable \"" + name + "\" was not declared");
 }
 
-bool SymbolTable::func_lookup(const std::string & name) {
+bool SymbolTable::func_lookup(const std::string & name) const {
     if (decfunc.count(name))
         return true;
     throw std::runtime_error("Function \"" + name + "\" was not declared");
 }
 
-bool SymbolTable::can_be_expr(const std::string & name) {
+bool SymbolTable::can_be_expr(const std::string & name) const {
     auto f = decfunc.find(name);
     if (f != decfunc.end()) {
         if (f->second == INT)
