@@ -6,7 +6,7 @@ def int ext_euclid(int a, int b, int s0, int t0, int s1, int t1) {
     if (!b) {
         return s0;
     }
-    return ext_euclid(b, mod(a, b), s1, t1, s0 - (a/b)*s1, t0 - (a/b)*t1);
+    return ext_euclid(b, mod(a, b), s1, t1, s0 - a/b*s1, t0 - a/b*t1);
 }
 
 def int main() {
