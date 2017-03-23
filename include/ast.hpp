@@ -18,7 +18,7 @@ namespace AST {
     
     class Instr : public Node {
     public:
-        virtual void codegen(SymbolTable &) const = 0;
+        virtual void validate(SymbolTable &) const = 0;
     };
     
     class Program : public Node {
@@ -30,17 +30,17 @@ namespace AST {
         Program(const std::shared_ptr<std::vector<std::shared_ptr<Instr>>>);
         
         void print(std::ostream &) const;
-        void codegen(SymbolTable &) const;
+        void validate(SymbolTable &) const;
     };
     
     class Stmt : public Node {
     public:
-        virtual void codegen(SymbolTable &) const = 0;
+        virtual void validate(SymbolTable &) const = 0;
     };
     
     class Expr : public Stmt {
     public:
-        virtual void codegen(SymbolTable &) const = 0;
+        virtual void validate(SymbolTable &) const = 0;
     };
     
     class Block;
@@ -66,7 +66,7 @@ namespace AST {
         DecVar(const int, const std::shared_ptr<std::string>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
-        void codegen(SymbolTable &) const;
+        void validate(SymbolTable &) const;
     };
     
     class DecFunc : public Instr {
@@ -81,7 +81,7 @@ namespace AST {
         DecFunc(const int, const std::shared_ptr<std::string>, const std::shared_ptr<Block>);
         
         void print(std::ostream &) const;
-        void codegen(SymbolTable &) const;
+        void validate(SymbolTable &) const;
     };
     
     class Block : public Node {
@@ -99,8 +99,8 @@ namespace AST {
         bool has_void_return() const;
         
         void print(std::ostream &) const;
-        void codegen(SymbolTable &) const;
-        void codegen(SymbolTable &, const std::shared_ptr<std::vector<Param>>) const;
+        void validate(SymbolTable &) const;
+        void validate(SymbolTable &, const std::shared_ptr<std::vector<Param>>) const;
     };
     
     class Assign : public Stmt {
@@ -112,7 +112,7 @@ namespace AST {
         Assign(const std::shared_ptr<std::string>, const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
-        void codegen(SymbolTable &) const;
+        void validate(SymbolTable &) const;
     };
     
     class If : public Stmt {
@@ -125,7 +125,7 @@ namespace AST {
         If(const std::shared_ptr<Expr>, const std::shared_ptr<Block>, const std::shared_ptr<Block>);
         
         void print(std::ostream &) const;
-        void codegen(SymbolTable &) const;
+        void validate(SymbolTable &) const;
     };
     
     class While : public Stmt {
@@ -137,7 +137,7 @@ namespace AST {
         While(const std::shared_ptr<Expr>, const std::shared_ptr<Block>);
         
         void print(std::ostream &) const;
-        void codegen(SymbolTable &) const;
+        void validate(SymbolTable &) const;
     };
     
     class Return : public Stmt {
@@ -150,19 +150,19 @@ namespace AST {
         
         void print(std::ostream &) const;
         bool has_val() const;
-        void codegen(SymbolTable &) const;
+        void validate(SymbolTable &) const;
     };
     
     class Continue : public Stmt {
     public:
         void print(std::ostream &) const;
-        void codegen(SymbolTable &) const;
+        void validate(SymbolTable &) const;
     };
     
     class Break : public Stmt {
     public:
         void print(std::ostream &) const;
-        void codegen(SymbolTable &) const;
+        void validate(SymbolTable &) const;
     };
     
     class BinOp : public Expr {
@@ -172,7 +172,7 @@ namespace AST {
     public:
         BinOp(const std::shared_ptr<Expr>, const std::shared_ptr<Expr>);
         virtual void print(std::ostream &) const;
-        virtual void codegen(SymbolTable &) const;
+        virtual void validate(SymbolTable &) const;
     };
     
     class Add : public BinOp {
@@ -266,7 +266,7 @@ namespace AST {
     public:
         UnOp(const std::shared_ptr<Expr>);
         virtual void print(std::ostream &) const;
-        virtual void codegen(SymbolTable &) const;
+        virtual void validate(SymbolTable &) const;
     };
     
     class Not : public UnOp {
@@ -291,7 +291,7 @@ namespace AST {
         Number(const std::shared_ptr<std::string>);
         
         void print(std::ostream &) const;
-        void codegen(SymbolTable &) const;
+        void validate(SymbolTable &) const;
     };
     
     class Var : public Expr {
@@ -302,7 +302,7 @@ namespace AST {
         Var(const std::shared_ptr<std::string>);
         
         void print(std::ostream &) const;
-        void codegen(SymbolTable &) const;
+        void validate(SymbolTable &) const;
     };
     
     class FuncCall : public Expr {
@@ -316,7 +316,7 @@ namespace AST {
         
         void print(std::ostream &) const;
         const std::string & get_name() const;
-        void codegen(SymbolTable &) const;
+        void validate(SymbolTable &) const;
     };
     
 };

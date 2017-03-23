@@ -16,50 +16,50 @@ void Program::print(std::ostream & os) const {
 }
 
 Program::Program(const std::shared_ptr<std::vector<std::shared_ptr<Instr>>> instr) : instr(instr) {
-    codegen(table);
+    validate(table);
     
     table.func_lookup("main");
 }
 
-void Continue::codegen(SymbolTable & table) const {}
+void Continue::validate(SymbolTable & table) const {}
 
-void Break::codegen(SymbolTable & table) const {}
+void Break::validate(SymbolTable & table) const {}
 
-void Number::codegen(SymbolTable & table) const {}
+void Number::validate(SymbolTable & table) const {}
 
-void Var::codegen(SymbolTable & table) const {
+void Var::validate(SymbolTable & table) const {
     table.var_lookup(*name);
 }
 
-void Assign::codegen(SymbolTable & table) const {
+void Assign::validate(SymbolTable & table) const {
     table.var_lookup(*lhs);
     if (FuncCall * func = dynamic_cast<FuncCall *>(rhs.get()))
         table.can_be_expr(func->get_name());
-    rhs->codegen(table);
+    rhs->validate(table);
 }
 
-void FuncCall::codegen(SymbolTable & table) const {
+void FuncCall::validate(SymbolTable & table) const {
     table.func_lookup(*name);
     if (args)
         for (auto arg = args->rbegin(); arg != args->rend(); arg++)
-            (*arg)->codegen(table);
+            (*arg)->validate(table);
 }
 
 const std::string & FuncCall::get_name() const {
     return *name;
 }
 
-void Program::codegen(SymbolTable & table) const {
+void Program::validate(SymbolTable & table) const {
     for (auto i = instr->rbegin(); i != instr->rend(); i++)
-        (*i)->codegen(table);
+        (*i)->validate(table);
 }
 
-void DecVar::codegen(SymbolTable & table) const {
+void DecVar::validate(SymbolTable & table) const {
     table.add_var(*name);
     if (rhs) {
         if (FuncCall * func = dynamic_cast<FuncCall *>(rhs.get()))
             table.can_be_expr(func->get_name());
-        rhs->codegen(table);
+        rhs->validate(table);
     }
 }
 
@@ -67,15 +67,15 @@ std::shared_ptr<std::string> Param::get_name() const {
     return name;
 }
 
-void DecFunc::codegen(SymbolTable & table) const {
+void DecFunc::validate(SymbolTable & table) const {
     table.add_func(type, *name);
     if (paramlist)
-        block->codegen(table, paramlist);
+        block->validate(table, paramlist);
     else
-        block->codegen(table);
+        block->validate(table);
 }
 
-void Block::codegen(SymbolTable & table) const {
+void Block::validate(SymbolTable & table) const {
     if (!table.inside_while()) {
         if (has_break())
             throw std::runtime_error("Break statement not within loop");
@@ -84,58 +84,58 @@ void Block::codegen(SymbolTable & table) const {
     }
     table.add_scope();
     for (auto i = vars->rbegin(); i != vars->rend(); i++)
-        (*i)->codegen(table);
+        (*i)->validate(table);
     for (auto i = stmts->rbegin(); i != stmts->rend(); i++)
-        (*i)->codegen(table);
+        (*i)->validate(table);
     table.pop_scope();
 }
 
-void Block::codegen(SymbolTable & table, const std::shared_ptr<std::vector<Param>> paramlist) const {
+void Block::validate(SymbolTable & table, const std::shared_ptr<std::vector<Param>> paramlist) const {
     for (const Param & param : *paramlist)
         vars->push_back(std::make_shared<DecVar>(INT, param.get_name()));
-    codegen(table);
+    validate(table);
     for (int i = 0, len = paramlist->size(); i < len; i++)
         vars->pop_back();
 }
 
-void If::codegen(SymbolTable & table) const {
+void If::validate(SymbolTable & table) const {
     if (FuncCall * func = dynamic_cast<FuncCall *>(expr.get()))
         table.can_be_expr(func->get_name());
-    expr->codegen(table);
-    if_block->codegen(table);
-    if (else_block) else_block->codegen(table);
+    expr->validate(table);
+    if_block->validate(table);
+    if (else_block) else_block->validate(table);
 }
 
-void While::codegen(SymbolTable & table) const {
+void While::validate(SymbolTable & table) const {
     table.add_while();
     if (FuncCall * func = dynamic_cast<FuncCall *>(expr.get()))
         table.can_be_expr(func->get_name());
-    expr->codegen(table);
-    block->codegen(table);
+    expr->validate(table);
+    block->validate(table);
     table.pop_while();
 }
 
-void Return::codegen(SymbolTable & table) const {
+void Return::validate(SymbolTable & table) const {
     if (expr) {
         if (FuncCall * func = dynamic_cast<FuncCall *>(expr.get()))
             table.can_be_expr(func->get_name());
-        expr->codegen(table);
+        expr->validate(table);
     }
 }
 
-void BinOp::codegen(SymbolTable & table) const {
+void BinOp::validate(SymbolTable & table) const {
     if (FuncCall * func = dynamic_cast<FuncCall *>(left.get()))
         table.can_be_expr(func->get_name());
     if (FuncCall * func = dynamic_cast<FuncCall *>(right.get()))
         table.can_be_expr(func->get_name());
-    left->codegen(table);
-    right->codegen(table);
+    left->validate(table);
+    right->validate(table);
 }
 
-void UnOp::codegen(SymbolTable & table) const {
+void UnOp::validate(SymbolTable & table) const {
     if (FuncCall * func = dynamic_cast<FuncCall *>(expr.get()))
         table.can_be_expr(func->get_name());
-    expr->codegen(table);
+    expr->validate(table);
 }
 
 void Param::print(std::ostream & os) const {
