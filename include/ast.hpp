@@ -89,14 +89,8 @@ namespace AST {
         const std::shared_ptr<std::vector<std::shared_ptr<DecVar>>> vars;
         const std::shared_ptr<std::vector<std::shared_ptr<Stmt>>> stmts;
         
-        bool has_continue() const;
-        bool has_break() const;
-    
     public:
         Block(const std::shared_ptr<std::vector<std::shared_ptr<DecVar>>>, const std::shared_ptr<std::vector<std::shared_ptr<Stmt>>>);
-        
-        bool has_int_return() const;
-        bool has_void_return() const;
         
         void print(std::ostream &) const;
         void validate(SymbolTable &) const;
@@ -149,7 +143,6 @@ namespace AST {
         Return(const std::shared_ptr<Expr>);
         
         void print(std::ostream &) const;
-        bool has_val() const;
         void validate(SymbolTable &) const;
     };
     

@@ -11,6 +11,15 @@ SymbolTable::SymbolTable() {
     add_func(VOID, "print", 1);
     
     whiles = 0;
+    int_func = false;
+}
+
+bool SymbolTable::inside_int_func() const {
+    return int_func;
+}
+
+const std::string & SymbolTable::get_func_name() const {
+    return *func_name;
 }
 
 void SymbolTable::add_scope() {
@@ -41,6 +50,8 @@ void SymbolTable::add_var(const std::string & name) {
 }
 
 void SymbolTable::add_func(const int type, const std::string & name, const unsigned int n_args) {
+    func_name = &name;
+    int_func = (type == INT);
     if (!decfunc.emplace(name, std::make_pair(type, n_args)).second)
         throw std::runtime_error("Redefintion of function \"" + name + "\"");
 }
