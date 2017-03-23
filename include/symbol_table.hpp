@@ -12,8 +12,7 @@ private:
     std::vector<std::unordered_set<std::string>> decvar;
     std::unordered_map<std::string, std::pair<int, unsigned int>> decfunc;
     unsigned int whiles;
-    std::string const * func_name;
-    bool int_func;
+    std::unordered_map<std::string, std::pair<int, unsigned int>>::iterator cur_func;
 
 public:
     SymbolTable();

@@ -4,11 +4,11 @@
 using namespace AST;
 
 std::ostream & operator <<(std::ostream & os, const Node & node) {
-    node.print(os);
+    node.codegen(os);
     return os;
 }
 
-void Program::print(std::ostream & os) const {
+void Program::codegen(std::ostream & os) const {
     os << "[program";
     for (auto i = instr->rbegin(); i != instr->rend(); i++)
         os << " " << **i;
@@ -148,11 +148,11 @@ void UnOp::validate(SymbolTable & table) const {
     expr->validate(table);
 }
 
-void Param::print(std::ostream & os) const {
+void Param::codegen(std::ostream & os) const {
     os << "[" << *name << "]";
 }
 
-void Block::print(std::ostream & os) const {
+void Block::codegen(std::ostream & os) const {
     os << "[block";
     for (auto d = vars->rbegin(); d != vars->rend(); d++)
         os << " " << **d;
@@ -161,44 +161,44 @@ void Block::print(std::ostream & os) const {
     os << "]";
 }
 
-void Assign::print(std::ostream & os) const {
+void Assign::codegen(std::ostream & os) const {
     os << "[assign [" << *lhs << "] " << *rhs << "]"; 
 }
 
-void If::print(std::ostream & os) const {
+void If::codegen(std::ostream & os) const {
     os << "[if " << *expr << " " << *if_block;
     if (else_block)
         os << " " << *else_block;
     os << "]";
 }
 
-void Return::print(std::ostream & os) const {
+void Return::codegen(std::ostream & os) const {
     os << "[return";
     if (expr)
         os << " " << *expr;
     os << "]";
 }
 
-void Continue::print(std::ostream & os) const {
+void Continue::codegen(std::ostream & os) const {
     os << "[continue]";
 }
 
-void Break::print(std::ostream & os) const {
+void Break::codegen(std::ostream & os) const {
     os << "[break]";
 }
 
-void While::print(std::ostream & os) const {
+void While::codegen(std::ostream & os) const {
     os << "[while " << *expr << " " << *block << "]";
 }
 
-void DecVar::print(std::ostream & os) const {
+void DecVar::codegen(std::ostream & os) const {
     os << "[decvar [" << *name << "]";
     if (rhs)
         os << " " << *rhs;
     os << "]";
 }
 
-void DecFunc::print(std::ostream & os) const {
+void DecFunc::codegen(std::ostream & os) const {
     os << "[decfunc [" << *name << "] [paramlist";
     if (paramlist)
         for (auto param = paramlist->rbegin(); param != paramlist->rend(); param++)
@@ -206,93 +206,93 @@ void DecFunc::print(std::ostream & os) const {
     os << "] " << *block << "]";
 }
 
-void BinOp::print(std::ostream & os) const {
+void BinOp::codegen(std::ostream & os) const {
     os << " " << *left << " " << *right << "]";
 }
 
-void Add::print(std::ostream & os) const {
+void Add::codegen(std::ostream & os) const {
     os << "[+";
-    BinOp::print(os);
+    BinOp::codegen(os);
 }
 
-void Sub::print(std::ostream & os) const {
+void Sub::codegen(std::ostream & os) const {
     os << "[-";
-    BinOp::print(os);
+    BinOp::codegen(os);
 }
 
-void Or::print(std::ostream & os) const {
+void Or::codegen(std::ostream & os) const {
     os << "[||";
-    BinOp::print(os);
+    BinOp::codegen(os);
 }
 
-void And::print(std::ostream & os) const {
+void And::codegen(std::ostream & os) const {
     os << "[&&";
-    BinOp::print(os);
+    BinOp::codegen(os);
 }
 
-void Times::print(std::ostream & os) const {
+void Times::codegen(std::ostream & os) const {
     os << "[*";
-    BinOp::print(os);
+    BinOp::codegen(os);
 }
 
-void Div::print(std::ostream & os) const {
+void Div::codegen(std::ostream & os) const {
     os << "[/";
-    BinOp::print(os);
+    BinOp::codegen(os);
 }
 
-void UnOp::print(std::ostream & os) const {
+void UnOp::codegen(std::ostream & os) const {
      os << " " << *expr << "]";
 }
 
-void Not::print(std::ostream & os) const {
+void Not::codegen(std::ostream & os) const {
     os << "[!";
-    UnOp::print(os);
+    UnOp::codegen(os);
 }
 
-void Opp::print(std::ostream & os) const {
+void Opp::codegen(std::ostream & os) const {
     os << "[-";
-    UnOp::print(os);
+    UnOp::codegen(os);
 }
 
-void Less::print(std::ostream & os) const {
+void Less::codegen(std::ostream & os) const {
     os << "[<";
-    BinOp::print(os);
+    BinOp::codegen(os);
 }
 
-void Leq::print(std::ostream & os) const {
+void Leq::codegen(std::ostream & os) const {
     os << "[<=";
-    BinOp::print(os);
+    BinOp::codegen(os);
 }
 
-void Great::print(std::ostream & os) const {
+void Great::codegen(std::ostream & os) const {
     os << "[>";
-    BinOp::print(os);
+    BinOp::codegen(os);
 }
 
-void Geq::print(std::ostream & os) const {
+void Geq::codegen(std::ostream & os) const {
     os << "[>=";
-    BinOp::print(os);
+    BinOp::codegen(os);
 }
 
-void Eq::print(std::ostream & os) const {
+void Eq::codegen(std::ostream & os) const {
     os << "[==";
-    BinOp::print(os);
+    BinOp::codegen(os);
 }
 
-void Diff::print(std::ostream & os) const {
+void Diff::codegen(std::ostream & os) const {
     os << "[!=";
-    BinOp::print(os);
+    BinOp::codegen(os);
 }
 
-void Number::print(std::ostream & os) const {
+void Number::codegen(std::ostream & os) const {
     os << "[" << val << "]";
 }
 
-void Var::print(std::ostream & os) const {
+void Var::codegen(std::ostream & os) const {
     os << "[" << *name << "]";
 }
 
-void FuncCall::print(std::ostream & os) const {
+void FuncCall::codegen(std::ostream & os) const {
     os << "[funccall [" << *name << "] [arglist";
     if (args) {
         for (auto arg = args->rbegin(); arg != args->rend(); arg++)
