@@ -311,6 +311,8 @@ DecFunc::DecFunc(const int type, const std::shared_ptr<std::string> name, const 
         throw std::runtime_error("Function \"" + *name + "\" has type \'void\' but returns an \'int\'");
     if (type == INT && block->has_void_return())
         throw std::runtime_error("Function \"" + *name + "\" has type \'int\' but returns no \'int\'");
+    if (*name == "main")
+        throw std::runtime_error("Function \"main\" should not have arguments");
 }
 
 bool Block::has_continue() const {
