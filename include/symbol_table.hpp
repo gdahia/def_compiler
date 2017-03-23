@@ -10,7 +10,7 @@
 class SymbolTable {
 private:
     std::vector<std::unordered_set<std::string>> decvar;
-    std::unordered_map<std::string, int> decfunc;
+    std::unordered_map<std::string, std::pair<int, unsigned int>> decfunc;
     unsigned int whiles;
 
 public:
@@ -21,14 +21,14 @@ public:
     SymbolTable & operator =(const SymbolTable &) = delete;
     
     void add_var(const std::string &);
-    void add_func(const int, const std::string &);
+    void add_func(const int, const std::string &, const unsigned int);
     void add_scope();
     void pop_scope();
     void add_while();
     void pop_while();
     bool inside_while() const;
     bool var_lookup(const std::string &) const;
-    bool func_lookup(const std::string &) const;
+    bool func_lookup(const std::string &, const unsigned int) const;
     bool can_be_expr(const std::string &) const;
 };
 

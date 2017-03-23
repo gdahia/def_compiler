@@ -18,7 +18,7 @@ void Program::print(std::ostream & os) const {
 Program::Program(const std::shared_ptr<std::vector<std::shared_ptr<Instr>>> instr) : instr(instr) {
     validate(table);
     
-    table.func_lookup("main");
+    table.func_lookup("main", 0);
 }
 
 void Continue::validate(SymbolTable & table) const {}
@@ -39,10 +39,13 @@ void Assign::validate(SymbolTable & table) const {
 }
 
 void FuncCall::validate(SymbolTable & table) const {
-    table.func_lookup(*name);
-    if (args)
+    if (args) {
+        table.func_lookup(*name, args->size());
         for (auto arg = args->rbegin(); arg != args->rend(); arg++)
             (*arg)->validate(table);
+    }
+    else
+        table.func_lookup(*name, 0);
 }
 
 const std::string & FuncCall::get_name() const {
@@ -68,11 +71,14 @@ std::shared_ptr<std::string> Param::get_name() const {
 }
 
 void DecFunc::validate(SymbolTable & table) const {
-    table.add_func(type, *name);
-    if (paramlist)
+    if (paramlist) {
+        table.add_func(type, *name, paramlist->size());
         block->validate(table, paramlist);
-    else
+    }
+    else {
+        table.add_func(type, *name, 0);
         block->validate(table);
+    }
 }
 
 void Block::validate(SymbolTable & table) const {
@@ -311,8 +317,6 @@ DecFunc::DecFunc(const int type, const std::shared_ptr<std::string> name, const 
         throw std::runtime_error("Function \"" + *name + "\" has type \'void\' but returns an \'int\'");
     if (type == INT && block->has_void_return())
         throw std::runtime_error("Function \"" + *name + "\" has type \'int\' but returns no \'int\'");
-    if (*name == "main")
-        throw std::runtime_error("Function \"main\" should not have arguments");
 }
 
 bool Block::has_continue() const {
