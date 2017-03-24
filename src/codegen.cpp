@@ -14,19 +14,25 @@ bool instanceof(const T * ptr) {
 
 void Program::codegen(std::ostream & os, SymbolTable & table) {
     // alocate all globals
-    os << ".data:" << std::endl;
+    os << ".data" << std::endl;
     for (auto i = instr->rbegin(); i != instr->rend(); i++)
         if (DecVar * decvar = dynamic_cast<DecVar *>(i->get()))
             os << decvar->get_name() << ": .word" << std::endl;
     
-    os << std::endl << ".text:" << std::endl;
+    os << std::endl << ".text" << std::endl;
     
     // implement print function
     os << "_f_print:" << std::endl;
     os << "lw $a0, 4($sp)" << std::endl;
     os << "li $v0, 1" << std::endl;
     os << "syscall" << std::endl;
-    os << "jal $ra" << std::endl << std::endl;
+    os << "li $v0, 11" << std::endl;
+    os << "li $a0, 0x0a" << std::endl;
+    os << "syscall" << std::endl;
+    os << "addiu $sp, $sp, 4" << std::endl;
+    os << "lw $fp, 4($sp)" << std::endl;
+    os << "addiu $sp, $sp, 4" << std::endl;
+    os << "j $ra" << std::endl << std::endl;
     
     // generate code for each function
     for (auto i = instr->rbegin(); i != instr->rend(); i++)
@@ -42,7 +48,9 @@ void Program::codegen(std::ostream & os, SymbolTable & table) {
             (*i)->codegen(os, table);
     
     // reserve space for locals
-    os << "addiu $sp, $sp, " << -4 * table.n_local_vars("main") << std::endl;
+    const unsigned int n_vars = table.n_local_vars("main");
+    if (n_vars)
+        os << "addiu $sp, $sp, " << -4 * n_vars << std::endl;
     
     // call main
     os << "jal _f_main" << std::endl;
@@ -56,11 +64,11 @@ void Param::codegen(std::ostream & os, SymbolTable & table) {
 }
 
 void Block::codegen(std::ostream & os, SymbolTable & table) {
-    for (auto v : *vars)
-        v->codegen(os, table);
+    for (auto var = vars->rbegin(); var != vars->rend(); var++)
+        (*var)->codegen(os, table);
     
-    for (auto s : *stmts)
-        s->codegen(os, table);
+    for (auto stmt = stmts->rbegin(); stmt != stmts->rend(); stmt++)
+        (*stmt)->codegen(os, table);
 }
 
 void Assign::codegen(std::ostream & os, SymbolTable & table) {
@@ -286,7 +294,9 @@ void FuncCall::codegen(std::ostream & os, SymbolTable & table) {
     os << "addiu $sp, $sp, -4" << std::endl;
     
     // reserve space for locals
-    os << "addiu $sp, $sp, " << -4 * table.n_local_vars(*name) << std::endl;
+    const int n_vars = table.n_local_vars(*name);
+    if (n_vars)
+        os << "addiu $sp, $sp, " << -4 * n_vars << std::endl;
     
     // push arguments
     if (args) {
