@@ -21,8 +21,8 @@ public:
     SymbolTable(SymbolTable &&) = delete;
     SymbolTable & operator =(const SymbolTable &) = delete;
     
-    void add_var(const std::string &);
-    void add_func(const int, const std::string &, const unsigned int);
+    bool add_var(const std::string &);
+    bool add_func(const int, const std::string &, const unsigned int);
     bool inside_int_func() const;
     const std::string & get_func_name() const;
     void add_scope();

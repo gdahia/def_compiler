@@ -3,6 +3,17 @@
 
 using namespace AST;
 
+void test_for_expr(SymbolTable & table, Expr * expr) {
+    FuncCall * func = dynamic_cast<FuncCall *>(expr);
+    if (func != nullptr && !table.can_be_expr(func->get_name()))
+        throw std::runtime_error("Function \"" + func->get_name() + "\" does not return \"int\", as it was previously declared \"void\"");
+}
+
+void test_var(SymbolTable & table, const std::string & name) {
+    if (!table.var_lookup(name))
+        throw std::runtime_error("Variable \"" + name + "\" was not declared");
+}
+
 void Continue::validate(SymbolTable & table) const {
     if (!table.inside_while())
         throw std::runtime_error("Continue statement not within loop");
@@ -16,47 +27,52 @@ void Break::validate(SymbolTable & table) const {
 void Number::validate(SymbolTable & table) const {}
 
 void Var::validate(SymbolTable & table) const {
-    table.var_lookup(*name);
+    test_var(table, *name);
 }
 
 void Assign::validate(SymbolTable & table) const {
-    table.var_lookup(*lhs);
-    if (FuncCall * func = dynamic_cast<FuncCall *>(rhs.get()))
-        table.can_be_expr(func->get_name());
+    test_var(table, *lhs);
+    test_for_expr(table, rhs.get());
     rhs->validate(table);
 }
 
 void FuncCall::validate(SymbolTable & table) const {
     if (args) {
-        table.func_lookup(*name, args->size());
+        if (!table.func_lookup(*name, args->size()))
+            throw std::runtime_error("\"" + *name + "\" function called with wrong number of arguments");
         for (auto arg = args->rbegin(); arg != args->rend(); arg++)
             (*arg)->validate(table);
     }
-    else
-        table.func_lookup(*name, 0);
+    else if (!table.func_lookup(*name, 0))
+        throw std::runtime_error("\"" + *name + "\" function called with wrong number of arguments");
 }
 
 void Program::validate(SymbolTable & table) const {
     for (auto i = instr->rbegin(); i != instr->rend(); i++)
         (*i)->validate(table);
+    
+    if (!table.func_lookup("main", 0))
+        throw std::runtime_error("\"main\" function called with wrong number of arguments");
 }
 
 void DecVar::validate(SymbolTable & table) const {
-    table.add_var(*name);
+    if (!table.add_var(*name))
+        throw std::runtime_error("Redefintion of function \"" + *name + "\"");
     if (rhs) {
-        if (FuncCall * func = dynamic_cast<FuncCall *>(rhs.get()))
-            table.can_be_expr(func->get_name());
+        test_for_expr(table, rhs.get());
         rhs->validate(table);
     }
 }
 
 void DecFunc::validate(SymbolTable & table) const {
     if (paramlist) {
-        table.add_func(type, *name, paramlist->size());
+        if (!table.add_func(type, *name, paramlist->size()))
+            throw std::runtime_error("Redeclaration of function \"" + *name + "\"");
         block->validate(table, paramlist);
     }
     else {
-        table.add_func(type, *name, 0);
+        if (!table.add_func(type, *name, 0))
+            throw std::runtime_error("Redeclaration of function \"" + *name + "\"");
         block->validate(table);
     }
 }
@@ -79,8 +95,7 @@ void Block::validate(SymbolTable & table, const std::shared_ptr<std::vector<Para
 }
 
 void If::validate(SymbolTable & table) const {
-    if (FuncCall * func = dynamic_cast<FuncCall *>(expr.get()))
-        table.can_be_expr(func->get_name());
+    test_for_expr(table, expr.get());
     expr->validate(table);
     if_block->validate(table);
     if (else_block) else_block->validate(table);
@@ -88,8 +103,7 @@ void If::validate(SymbolTable & table) const {
 
 void While::validate(SymbolTable & table) const {
     table.add_while();
-    if (FuncCall * func = dynamic_cast<FuncCall *>(expr.get()))
-        table.can_be_expr(func->get_name());
+    test_for_expr(table, expr.get());
     expr->validate(table);
     block->validate(table);
     table.pop_while();
@@ -99,8 +113,7 @@ void Return::validate(SymbolTable & table) const {
     if (expr) {
         if (!table.inside_int_func())
             throw std::runtime_error("Function \"" + table.get_func_name() + "\" has type \'void\' but returns an \'int\'");
-        if (FuncCall * func = dynamic_cast<FuncCall *>(expr.get()))
-            table.can_be_expr(func->get_name());
+        test_for_expr(table, expr.get());
         expr->validate(table);
     }
     else if (table.inside_int_func())
@@ -108,16 +121,13 @@ void Return::validate(SymbolTable & table) const {
 }
 
 void BinOp::validate(SymbolTable & table) const {
-    if (FuncCall * func = dynamic_cast<FuncCall *>(left.get()))
-        table.can_be_expr(func->get_name());
-    if (FuncCall * func = dynamic_cast<FuncCall *>(right.get()))
-        table.can_be_expr(func->get_name());
+    test_for_expr(table, left.get());
+    test_for_expr(table, right.get());
     left->validate(table);
     right->validate(table);
 }
 
 void UnOp::validate(SymbolTable & table) const {
-    if (FuncCall * func = dynamic_cast<FuncCall *>(expr.get()))
-        table.can_be_expr(func->get_name());
+    test_for_expr(table, expr.get());
     expr->validate(table);
 }

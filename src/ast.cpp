@@ -10,8 +10,6 @@ std::ostream & operator <<(std::ostream & os, const Node & node) {
 
 Program::Program(const std::shared_ptr<std::vector<std::shared_ptr<Instr>>> instr) : instr(instr) {
     validate(table);
-    
-    table.func_lookup("main", 0);
 }
 
 const std::string & FuncCall::get_name() const {

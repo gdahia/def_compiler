@@ -43,43 +43,35 @@ void SymbolTable::pop_scope() {
     decvar.pop_back();
 }
 
-void SymbolTable::add_var(const std::string & name) {
-    if (!decvar.back().insert(name).second)
-        throw std::runtime_error("Redefinition of variable \"" + name + "\"");
+bool SymbolTable::add_var(const std::string & name) {
+    return decvar.back().insert(name).second;
 }
 
-void SymbolTable::add_func(const int type, const std::string & name, const unsigned int n_args) {
+bool SymbolTable::add_func(const int type, const std::string & name, const unsigned int n_args) {
     bool success;
     std::tie(cur_func, success) = decfunc.emplace(name, std::make_pair(type, n_args));
-    if (!success)
-        throw std::runtime_error("Redefintion of function \"" + name + "\"");
+    return success;
 }
 
 bool SymbolTable::var_lookup(const std::string & name) const {
     for (auto i = decvar.rbegin(); i != decvar.rend(); i++)
         if (i->count(name))
             return true;
-    throw std::runtime_error("Variable \"" + name + "\" was not declared");
+    return false;
 }
 
 bool SymbolTable::func_lookup(const std::string & name, const unsigned int n_args) const {
     auto f = decfunc.find(name);
-    if (f != decfunc.end()) {
-        if (f->second.second == n_args)
-            return true;
-        throw std::runtime_error("\"" + name + "\" function called with " + std::to_string(n_args) + " arguments, but it takes " + std::to_string(f->second.second) + " parameters"); 
-    }
-    throw std::runtime_error("Function \"" + name + "\" was not declared");
+    if (f == decfunc.end())
+        throw std::runtime_error("Function \"" + name + "\" was not declared");
+    
+    return f->second.second == n_args;
 }
 
 bool SymbolTable::can_be_expr(const std::string & name) const {
     auto f = decfunc.find(name);
-    if (f != decfunc.end()) {
-        if (f->second.first == INT)
-            return true;
-        else
-            throw std::runtime_error("Function \"" + name + "\" does not return \"int\", as it was previously declared \"void\"");
-    }
-    else
+    if (f == decfunc.end())
         throw std::runtime_error("Function \"" + name + "\" was not declared");
+    
+    return f->second.first == INT;
 }
