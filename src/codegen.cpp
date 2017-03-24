@@ -29,7 +29,7 @@ void Program::codegen(std::ostream & os, SymbolTable & table) {
             (*i)->codegen(os, table);
     
     // call program main function
-    os << "__start:" << std::endl;
+    os << "main:" << std::endl;
     
     // compute starting value of each global function
     for (auto i = instr->rbegin(); i != instr->rend(); i++)
@@ -41,6 +41,10 @@ void Program::codegen(std::ostream & os, SymbolTable & table) {
     
     // call main
     os << "jal _f_main" << std::endl;
+    
+    // end program
+    os << "li $v0, 10" << std::endl;
+    os << "syscall" << std::endl;
 }
 
 void Param::codegen(std::ostream & os, SymbolTable & table) {
