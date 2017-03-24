@@ -59,12 +59,17 @@ void SymbolTable::pop_scope() {
 }
 
 bool SymbolTable::add_var(const std::string & name) {
+    if (decvar.size() > 1) {
+        locals[cur_func->first]++;
+        // save var idx
+    }
     return decvar.back().insert(name).second;
 }
 
 bool SymbolTable::add_func(const int type, const std::string & name, const unsigned int n_args) {
     bool success;
     std::tie(cur_func, success) = decfunc.emplace(name, std::make_pair(type, n_args));
+    // index params
     return success;
 }
 
@@ -83,12 +88,30 @@ bool SymbolTable::func_lookup(const std::string & name, const unsigned int n_arg
     return f->second.second == n_args;
 }
 
+bool SymbolTable::is_global(const std::string & name) const {
+    return decvar[0].find(name) != decvar[0].end();
+}
+
+int SymbolTable::var_idx(const std::string & name) const {
+    return 1;
+}
+
+std::string SymbolTable::var_name(const std::string & name) const {
+    if (is_global(name))
+        return name + "($gp)";
+    return std::to_string(-4 * var_idx(name)) + "($fp)";
+}
+
 void SymbolTable::clear() {
     whiles = 0;
     abs_whiles = 0;
     ifs = 0;
     decvar.clear();
     decfunc.clear();
+}
+
+int SymbolTable::n_local_vars(const std::string & name) {
+    return locals[name];
 }
 
 bool SymbolTable::can_be_expr(const std::string & name) const {

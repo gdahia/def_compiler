@@ -21,6 +21,8 @@ void Program::codegen(std::ostream & os, SymbolTable & table) {
     
     os << std::endl << ".text:" << std::endl;
     
+    // implement print function
+    
     // generate code for each function
     for (auto i = instr->rbegin(); i != instr->rend(); i++)
         if (instanceof<DecFunc>(i->get()))
@@ -34,6 +36,9 @@ void Program::codegen(std::ostream & os, SymbolTable & table) {
         if (instanceof<DecVar>(i->get()))
             (*i)->codegen(os, table);
     
+    // reserve space for locals
+    os << "addiu $sp, $sp, " << -4 * table.n_local_vars("main") << std::endl;
+    
     // call main
     os << "jal _f_main" << std::endl;
 }
@@ -42,9 +47,16 @@ void Param::codegen(std::ostream & os, SymbolTable & table) {
 }
 
 void Block::codegen(std::ostream & os, SymbolTable & table) {
+    for (auto v : *vars)
+        v->codegen(os, table);
+    
+    for (auto s : *stmts)
+        s->codegen(os, table);
 }
 
 void Assign::codegen(std::ostream & os, SymbolTable & table) {
+    rhs->codegen(os, table);
+    
 }
 
 void If::codegen(std::ostream & os, SymbolTable & table) {
@@ -114,6 +126,7 @@ void While::codegen(std::ostream & os, SymbolTable & table) {
 void DecVar::codegen(std::ostream & os, SymbolTable & table) {
     if (rhs) {
         rhs->codegen(os, table);
+        os << "sw $a0, " << table.var_name(*name) << std::endl;
     }
 }
 
@@ -143,6 +156,9 @@ void DecFunc::codegen(std::ostream & os, SymbolTable & table) {
     // pop parameters, if any
     if (paramlist)
         os << "addiu $sp, $sp, " << 4*paramlist->size() << std::endl;
+        
+    // pop locals
+    
     
     // pop frame pointer
     os << "lw $fp, 4($sp)" << std::endl;
@@ -254,7 +270,7 @@ void Number::codegen(std::ostream & os, SymbolTable & table) {
 }
 
 void Var::codegen(std::ostream & os, SymbolTable & table) {
-    os << "lw $a0, " << table.var_lookup(*name) << std::endl;
+    os << "lw $a0, " << table.var_name(*name) << std::endl;
 }
 
 void FuncCall::codegen(std::ostream & os, SymbolTable & table) {
@@ -263,7 +279,7 @@ void FuncCall::codegen(std::ostream & os, SymbolTable & table) {
     os << "addiu $sp, $sp, -4" << std::endl;
     
     // reserve space for locals
-    os << "addiu $sp, $sp, " << -4 * 1 << std::endl;
+    os << "addiu $sp, $sp, " << -4 * table.n_local_vars(*name) << std::endl;
     
     // push arguments
     if (args) {

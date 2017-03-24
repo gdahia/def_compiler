@@ -13,6 +13,10 @@ private:
     std::unordered_map<std::string, std::pair<int, unsigned int>> decfunc;
     unsigned int whiles, abs_whiles, ifs;
     std::unordered_map<std::string, std::pair<int, unsigned int>>::iterator cur_func;
+    std::unordered_map<std::string, int> locals;
+    
+    bool is_global(const std::string &) const;
+    int var_idx(const std::string &) const;
 
 public:
     SymbolTable();
@@ -36,7 +40,9 @@ public:
     bool inside_while() const;
     bool var_lookup(const std::string &) const;
     bool func_lookup(const std::string &, const unsigned int) const;
+    int n_local_vars(const std::string &);
     bool can_be_expr(const std::string &) const;
+    std::string var_name(const std::string &) const;
 };
 
 #endif
