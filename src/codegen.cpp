@@ -134,8 +134,6 @@ void DecFunc::codegen(std::ostream & os, SymbolTable & table) {
     // function label
     os << "_f_" << *name << ":" << std::endl;
     
-    /* alocate all vars inside this func */
-    
     // turn stack pointer into new frame pointer
     os << "move $fp, $sp" << std::endl;
     
@@ -158,7 +156,7 @@ void DecFunc::codegen(std::ostream & os, SymbolTable & table) {
         os << "addiu $sp, $sp, " << 4*paramlist->size() << std::endl;
         
     // pop locals
-    
+    os << "addiu $sp, $sp, " << 4 * table.n_local_vars(*name) << std::endl;
     
     // pop frame pointer
     os << "lw $fp, 4($sp)" << std::endl;
