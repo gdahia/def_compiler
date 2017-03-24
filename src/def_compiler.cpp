@@ -21,13 +21,13 @@ int main(const int argc, const char ** argv) {
         std::ofstream out(argv[2]);
         if (out.is_open()) {
             yyparse();
-            out << *program << std::endl;
+            program->codegen(out);
         }
         else
             throw std::runtime_error("Unable to open file " + std::string(argv[2]));
     }
     else {
         yyparse();
-        std::cout << *program << std::endl;
+        program->codegen(std::cout);
     }
 }

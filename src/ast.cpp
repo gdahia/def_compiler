@@ -3,11 +3,6 @@
 
 using namespace AST;
 
-std::ostream & operator <<(std::ostream & os, const Node & node) {
-    node.codegen(os);
-    return os;
-}
-
 Program::Program(const std::shared_ptr<std::vector<std::shared_ptr<Instr>>> instr) : instr(instr) {
     validate(table);
     
