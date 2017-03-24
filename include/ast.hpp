@@ -68,6 +68,7 @@ namespace AST {
         
         void codegen(std::ostream &, SymbolTable &);
         void validate(SymbolTable &) const;
+        const std::string & get_name() const;
     };
     
     class DecFunc : public Instr {

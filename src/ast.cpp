@@ -11,6 +11,10 @@ const std::string & FuncCall::get_name() const {
     return *name;
 }
 
+const std::string & DecVar::get_name() const {
+    return *name;
+}
+
 std::shared_ptr<std::string> Param::get_name() const {
     return name;
 }

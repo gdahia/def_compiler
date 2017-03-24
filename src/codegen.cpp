@@ -14,14 +14,19 @@ bool instanceof(const T * ptr) {
 
 void Program::codegen(std::ostream & os, SymbolTable & table) {
     // alocate all globals
+    os << ".data:" << std::endl;
     for (auto i = instr->rbegin(); i != instr->rend(); i++)
-        if (instanceof<DecVar>(i->get()))
-            (*i)->codegen(os, table);
+        if (DecVar * decvar = dynamic_cast<DecVar *>(i->get()))
+            os << decvar->get_name() << ": .word" << std::endl;
+    
+    os << std::endl << ".text:" << std::endl;
     
     // generate code for each function
     for (auto i = instr->rbegin(); i != instr->rend(); i++)
         if (instanceof<DecFunc>(i->get()))
             (*i)->codegen(os, table);
+    
+    // call program main function
 }
 
 void Param::codegen(std::ostream & os, SymbolTable & table) {
