@@ -27,6 +27,15 @@ void Program::codegen(std::ostream & os, SymbolTable & table) {
             (*i)->codegen(os, table);
     
     // call program main function
+    os << "__start:" << std::endl;
+    
+    // compute starting value of each global function
+    for (auto i = instr->rbegin(); i != instr->rend(); i++)
+        if (instanceof<DecVar>(i->get()))
+            (*i)->codegen(os, table);
+    
+    // call main
+    os << "jal _f_main" << std::endl;
 }
 
 void Param::codegen(std::ostream & os, SymbolTable & table) {
@@ -104,10 +113,7 @@ void While::codegen(std::ostream & os, SymbolTable & table) {
 
 void DecVar::codegen(std::ostream & os, SymbolTable & table) {
     if (rhs) {
-    
-    }
-    else {
-    
+        rhs->codegen(os, table);
     }
 }
 
