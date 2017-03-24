@@ -56,12 +56,12 @@ void Program::validate(SymbolTable & table) const {
 }
 
 void DecVar::validate(SymbolTable & table) const {
-    if (!table.add_var(*name))
-        throw std::runtime_error("Redefintion of function \"" + *name + "\"");
     if (rhs) {
         test_for_expr(table, rhs.get());
         rhs->validate(table);
     }
+    if (!table.add_var(*name))
+        throw std::runtime_error("Redefintion of function \"" + *name + "\"");
 }
 
 void DecFunc::validate(SymbolTable & table) const {
