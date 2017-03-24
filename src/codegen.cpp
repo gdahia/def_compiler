@@ -22,6 +22,11 @@ void Program::codegen(std::ostream & os, SymbolTable & table) {
     os << std::endl << ".text:" << std::endl;
     
     // implement print function
+    os << "_f_print:" << std::endl;
+    os << "lw $a0, 4($sp)" << std::endl;
+    os << "li $v0, 1" << std::endl;
+    os << "syscall" << std::endl;
+    os << "jal $ra" << std::endl << std::endl;
     
     // generate code for each function
     for (auto i = instr->rbegin(); i != instr->rend(); i++)
