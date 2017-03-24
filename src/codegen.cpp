@@ -260,7 +260,6 @@ void Leq::codegen(std::ostream & os, SymbolTable & table) {
 void Great::codegen(std::ostream & os, SymbolTable & table) {
     BinOp::codegen(os, table);
     os << "slt $a0, $a0, $t1" << std::endl;
-    os << "addiu $sp, $sp, 4" << std::endl;
 }
 
 void Geq::codegen(std::ostream & os, SymbolTable & table) {
