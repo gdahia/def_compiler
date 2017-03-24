@@ -11,6 +11,8 @@ SymbolTable::SymbolTable() {
     add_func(VOID, "print", 1);
     
     whiles = 0;
+    abs_whiles = 0;
+    ifs = 0;
 }
 
 bool SymbolTable::inside_int_func() const {
@@ -27,6 +29,19 @@ void SymbolTable::add_scope() {
 
 void SymbolTable::add_while() {
     whiles++;
+    abs_whiles++;
+}
+
+void SymbolTable::add_if() {
+    ifs++;
+}
+
+unsigned int SymbolTable::get_current_while() const {
+    return abs_whiles;
+}
+
+unsigned int SymbolTable::get_current_if() const {
+    return ifs;
 }
 
 void SymbolTable::pop_while() {
@@ -66,6 +81,14 @@ bool SymbolTable::func_lookup(const std::string & name, const unsigned int n_arg
         throw std::runtime_error("Function \"" + name + "\" was not declared");
     
     return f->second.second == n_args;
+}
+
+void SymbolTable::clear() {
+    whiles = 0;
+    abs_whiles = 0;
+    ifs = 0;
+    decvar.clear();
+    decfunc.clear();
 }
 
 bool SymbolTable::can_be_expr(const std::string & name) const {
