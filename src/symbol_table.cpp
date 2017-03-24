@@ -91,14 +91,6 @@ void SymbolTable::clear() {
     decfunc.clear();
 }
 
-void SymbolTable::clear() {
-    whiles = 0;
-    abs_whiles = 0;
-    ifs = 0;
-    decvar.clear();
-    decfunc.clear();
-}
-
 bool SymbolTable::can_be_expr(const std::string & name) const {
     auto f = decfunc.find(name);
     if (f == decfunc.end())
