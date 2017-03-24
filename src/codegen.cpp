@@ -3,11 +3,25 @@
 
 using namespace AST;
 
-void Program::codegen(std::ostream & os, SymbolTable & table) {
-}
-
 void Program::codegen(std::ostream & os) {
     codegen(os, table);
+}
+
+template<typename Base, typename T>
+bool instanceof(const T * ptr) {
+    return dynamic_cast<const Base *>(ptr) != nullptr;
+}
+
+void Program::codegen(std::ostream & os, SymbolTable & table) {
+    // alocate all globals
+    for (auto i = instr->rbegin(); i != instr->rend(); i++)
+        if (instanceof<DecVar>(i->get()))
+            (*i)->codegen(os, table);
+    
+    // generate code for each function
+    for (auto i = instr->rbegin(); i != instr->rend(); i++)
+        if (instanceof<DecFunc>(i->get()))
+            (*i)->codegen(os, table);
 }
 
 void Param::codegen(std::ostream & os, SymbolTable & table) {
@@ -46,6 +60,12 @@ void If::codegen(std::ostream & os, SymbolTable & table) {
 }
 
 void Return::codegen(std::ostream & os, SymbolTable & table) {
+    // put return value in $a0, if any
+    if (expr)
+        expr->codegen(os, table);
+    
+    // exit function
+    os << "b _end_f_" << table.get_func_name() << std::endl;
 }
 
 void Continue::codegen(std::ostream & os, SymbolTable & table) {
@@ -78,29 +98,73 @@ void While::codegen(std::ostream & os, SymbolTable & table) {
 }
 
 void DecVar::codegen(std::ostream & os, SymbolTable & table) {
+    if (rhs) {
+    
+    }
+    else {
+    
+    }
 }
 
 void DecFunc::codegen(std::ostream & os, SymbolTable & table) {
+    // function label
+    os << "_f_" << *name << ":" << std::endl;
+    
+    /* alocate all vars inside this func */
+    
+    // turn stack pointer into new frame pointer
+    os << "move $fp, $sp" << std::endl;
+    
+    // push return address
+    os << "sw $ra, 0($sp)" << std::endl;
+    os << "addiu $sp, $sp, -4" << std::endl;
+    
+    // generate code for function
+    block->codegen(os, table);
+    
+    // label for exiting function
+    os << "_end_f_" << *name << ":" << std::endl;
+    
+    // pop return address
+    os << "lw $ra, 4($sp)" << std::endl;
+    os << "addiu $sp, $sp, 4" << std::endl;
+    
+    // pop parameters, if any
+    if (paramlist)
+        os << "addiu $sp, $sp, " << 4*paramlist->size() << std::endl;
+    
+    // pop frame pointer
+    os << "lw $fp, 4($sp)" << std::endl;
+    os << "addiu $sp, $sp, 4" << std::endl;
+    
+    // returns to caller
+    os << "j $ra" << std::endl;
 }
 
 void BinOp::codegen(std::ostream & os, SymbolTable & table) {
+    // compute lhs
     left->codegen(os, table);
+    
+    // push lhs
     os << "sw $a0, 0($sp)" << std::endl;
     os << "addiu $sp, $sp, -4" << std::endl;
+    
+    // compute rhs
     right->codegen(os, table);
+    
+    // pop lhs in $t1
     os << "lw $t1, 4($sp)" << std::endl;
+    os << "addiu $sp, $sp, 4" << std::endl;
 }
 
 void Add::codegen(std::ostream & os, SymbolTable & table) {
     BinOp::codegen(os, table);
     os << "add $a0, $t1, $a0" << std::endl;
-    os << "addiu $sp, $sp, 4" << std::endl;
 }
 
 void Sub::codegen(std::ostream & os, SymbolTable & table) {
     BinOp::codegen(os, table);
     os << "sub $a0, $t1, $a0" << std::endl;
-    os << "addiu $sp, $sp, 4" << std::endl;
 }
 
 void Or::codegen(std::ostream & os, SymbolTable & table) {
@@ -108,7 +172,6 @@ void Or::codegen(std::ostream & os, SymbolTable & table) {
     os << "sltu $a0, $0, $a0" << std::endl;
     os << "sltu $t1, $0, $t1" << std::endl;
     os << "or $a0, $t1, $a0" << std::endl;
-    os << "addiu $sp, $sp, 4" << std::endl;
 }
 
 void And::codegen(std::ostream & os, SymbolTable & table) {
@@ -116,20 +179,17 @@ void And::codegen(std::ostream & os, SymbolTable & table) {
     os << "sltu $a0, $0, $a0" << std::endl;
     os << "sltu $t1, $0, $t1" << std::endl;
     os << "and $a0, $t1, $a0" << std::endl;
-    os << "addiu $sp, $sp, 4" << std::endl;
 }
 
 void Times::codegen(std::ostream & os, SymbolTable & table) {
     BinOp::codegen(os, table);
     os << "mul $a0, $t1, $a0" << std::endl;
-    os << "addiu $sp, $sp, 4" << std::endl;
 }
 
 void Div::codegen(std::ostream & os, SymbolTable & table) {
     BinOp::codegen(os, table);
     os << "div $t1, $a0" << std::endl;
     os << "mflo $a0" << std::endl;
-    os << "addiu $sp, $sp, 4" << std::endl;
 }
 
 void Not::codegen(std::ostream & os, SymbolTable & table) {
@@ -147,14 +207,12 @@ void Opp::codegen(std::ostream & os, SymbolTable & table) {
 void Less::codegen(std::ostream & os, SymbolTable & table) {
     BinOp::codegen(os, table);
     os << "slt $a0, $t1, $a0" << std::endl;
-    os << "addiu $sp, $sp, 4" << std::endl;
 }
 
 void Leq::codegen(std::ostream & os, SymbolTable & table) {
     BinOp::codegen(os, table);
     os << "slt $a0, $a0, $t1" << std::endl;
     os << "xori $a0, $a0, 1" << std::endl;
-    os << "addiu $sp, $sp, 4" << std::endl;
 }
 
 void Great::codegen(std::ostream & os, SymbolTable & table) {
@@ -167,20 +225,17 @@ void Geq::codegen(std::ostream & os, SymbolTable & table) {
     BinOp::codegen(os, table);
     os << "slt $a0, $t1, $a0" << std::endl;
     os << "xori $a0, $a0, 1" << std::endl;
-    os << "addiu $sp, $sp, 4" << std::endl;
 }
 
 void Eq::codegen(std::ostream & os, SymbolTable & table) {
     BinOp::codegen(os, table);
     os << "sltu $a0, $0, $a0" << std::endl;
-    os << "addiu $sp, $sp, 4" << std::endl;
 }
 
 void Diff::codegen(std::ostream & os, SymbolTable & table) {
     BinOp::codegen(os, table);
     os << "sub $a0, $t1, $a0" << std::endl;
     os << "movn $a0, $0, $a0" << std::endl;
-    os << "addiu $sp, $sp, 4" << std::endl;
 }
 
 void Number::codegen(std::ostream & os, SymbolTable & table) {
@@ -192,4 +247,20 @@ void Var::codegen(std::ostream & os, SymbolTable & table) {
 }
 
 void FuncCall::codegen(std::ostream & os, SymbolTable & table) {
+    // push frame pointer
+    os << "sw $fp, 0($sp)" << std::endl;
+    os << "addiu $sp, $sp, -4" << std::endl;
+    
+    // allocate all locals
+    
+    // push arguments
+    if (args)
+        for (auto arg : *args) {
+            arg->codegen(os, table);
+            os << "sw $a0, 0($sp)" << std::endl;
+            os << "addiu $sp, $sp, -4" << std::endl;
+        }
+    
+    // goto function
+    os << "jal _f_" << *name << std::endl;
 }
