@@ -138,7 +138,7 @@ void DecFunc::codegen(std::ostream & os, SymbolTable & table) {
     os << "addiu $sp, $sp, 4" << std::endl;
     
     // returns to caller
-    os << "j $ra" << std::endl;
+    os << "j $ra" << std::endl << std::endl;
 }
 
 void BinOp::codegen(std::ostream & os, SymbolTable & table) {
