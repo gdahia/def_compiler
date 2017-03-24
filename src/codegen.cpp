@@ -251,15 +251,17 @@ void FuncCall::codegen(std::ostream & os, SymbolTable & table) {
     os << "sw $fp, 0($sp)" << std::endl;
     os << "addiu $sp, $sp, -4" << std::endl;
     
-    // allocate all locals
+    // reserve space for locals
+    os << "addiu $sp, $sp, " << -4 * 1 << std::endl;
     
     // push arguments
-    if (args)
+    if (args) {
         for (auto arg : *args) {
             arg->codegen(os, table);
             os << "sw $a0, 0($sp)" << std::endl;
             os << "addiu $sp, $sp, -4" << std::endl;
         }
+    }
     
     // goto function
     os << "jal _f_" << *name << std::endl;
