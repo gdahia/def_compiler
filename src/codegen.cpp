@@ -144,6 +144,9 @@ void While::codegen(std::ostream & os, SymbolTable & table) {
     // while block
     block->codegen(os, table);
     
+    // loop
+    os << "b _while_" << label << std::endl;
+    
     // end while
     os << "_end_while_" << label << ":" << std::endl;
 }
