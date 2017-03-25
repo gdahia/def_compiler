@@ -48,8 +48,12 @@ void Program::codegen(std::ostream & os, SymbolTable & table) {
         if (instanceof<DecVar>(i->get()))
             (*i)->codegen(os, table);
     
+    // push frame pointer
+    os << "sw $fp, 0($sp)" << std::endl;
+    os << "addiu $sp, $sp, -4" << std::endl;
+    
     // reserve space for locals
-    const unsigned int n_vars = table.n_local_vars("main");
+    const int n_vars = table.n_local_vars("main");
     if (n_vars)
         os << "addiu $sp, $sp, " << -4 * n_vars << std::endl;
     
