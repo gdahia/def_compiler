@@ -334,6 +334,3 @@ void FuncCall::codegen(std::ostream & os, SymbolTable & table) {
     // goto function
     os << "jal _f_" << *name << std::endl;
 }
-    // set function name
-    table.add_func(INT, *name, (paramlist ? paramlist->size() : 0));
-    
