@@ -66,14 +66,17 @@ void Program::codegen(std::ostream & os, SymbolTable & table) {
 }
 
 void Param::codegen(std::ostream & os, SymbolTable & table) {
+    table.add_name(*name);
 }
 
 void Block::codegen(std::ostream & os, SymbolTable & table) {
+    table.add_namespace();
     for (auto var = vars->rbegin(); var != vars->rend(); var++)
         (*var)->codegen(os, table);
     
     for (auto stmt = stmts->rbegin(); stmt != stmts->rend(); stmt++)
         (*stmt)->codegen(os, table);
+    table.pop_namespace();
 }
 
 void Assign::codegen(std::ostream & os, SymbolTable & table) {
@@ -146,6 +149,7 @@ void While::codegen(std::ostream & os, SymbolTable & table) {
 }
 
 void DecVar::codegen(std::ostream & os, SymbolTable & table) {
+    table.add_name(*name);
     if (rhs) {
         rhs->codegen(os, table);
         os << "sw $a0, " << table.var_name(*name) << std::endl;
@@ -155,6 +159,16 @@ void DecVar::codegen(std::ostream & os, SymbolTable & table) {
 }
 
 void DecFunc::codegen(std::ostream & os, SymbolTable & table) {
+    // set function name
+    table.add_func(INT, *name, (paramlist ? paramlist->size() : 0));
+    
+    // add params space to symbol table
+    if (paramlist) {
+        table.add_namespace();
+        for (auto param = paramlist->rbegin(); param != paramlist->rend(); param++)
+            param->codegen(os, table);
+    }
+    
     // function label
     os << "_f_" << *name << ":" << std::endl;
     
@@ -176,8 +190,10 @@ void DecFunc::codegen(std::ostream & os, SymbolTable & table) {
     os << "addiu $sp, $sp, 4" << std::endl;
     
     // pop parameters, if any
-    if (paramlist)
+    if (paramlist) {
+        table.pop_namespace();
         os << "addiu $sp, $sp, " << 4*paramlist->size() << std::endl;
+    }
         
     // pop locals
     os << "addiu $sp, $sp, " << 4 * table.n_local_vars(*name) << std::endl;

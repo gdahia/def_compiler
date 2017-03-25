@@ -13,7 +13,11 @@ private:
     std::unordered_map<std::string, std::pair<int, unsigned int>> decfunc;
     unsigned int whiles, abs_whiles, ifs;
     std::unordered_map<std::string, std::pair<int, unsigned int>>::iterator cur_func;
+    
+    // codegen
     std::unordered_map<std::string, int> locals;
+    std::vector<std::unordered_map<std::string, int>> names;
+    unsigned int acc;
     
     bool is_global(const std::string &) const;
     int var_idx(const std::string &) const;
@@ -33,6 +37,9 @@ public:
     unsigned int get_current_if() const;
     void add_scope();
     void pop_scope();
+    void add_namespace();
+    void pop_namespace();
+    void add_name(const std::string &);
     void add_while();
     unsigned int get_current_while() const;
     void pop_while();
