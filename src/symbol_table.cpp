@@ -11,6 +11,9 @@ SymbolTable::SymbolTable() {
     add_func(VOID, "print", 1);
     
     whiles = 0;
+    abs_whiles = 0;
+    ifs = 0;
+    acc = 0;
 }
 
 bool SymbolTable::inside_int_func() const {
@@ -27,6 +30,19 @@ void SymbolTable::add_scope() {
 
 void SymbolTable::add_while() {
     whiles++;
+    abs_whiles++;
+}
+
+void SymbolTable::add_if() {
+    ifs++;
+}
+
+unsigned int SymbolTable::get_current_while() const {
+    return abs_whiles;
+}
+
+unsigned int SymbolTable::get_current_if() const {
+    return ifs;
 }
 
 void SymbolTable::pop_while() {
@@ -44,6 +60,9 @@ void SymbolTable::pop_scope() {
 }
 
 bool SymbolTable::add_var(const std::string & name) {
+    if (decvar.size() > 1)
+        locals[cur_func->first]++;
+
     return decvar.back().insert(name).second;
 }
 
@@ -66,6 +85,51 @@ bool SymbolTable::func_lookup(const std::string & name, const unsigned int n_arg
         throw std::runtime_error("Function \"" + name + "\" was not declared");
     
     return f->second.second == n_args;
+}
+
+bool SymbolTable::is_global(const std::string & name) const {
+    return decvar[0].find(name) != decvar[0].end();
+}
+
+void SymbolTable::add_name(const std::string & name) {
+    if (!names.empty())
+        names.back()[name] = ++acc;
+}
+
+void SymbolTable::add_namespace() {
+    names.emplace_back();
+}
+
+void SymbolTable::pop_namespace() {
+    acc -= names.back().size();
+    names.pop_back();
+}
+
+int SymbolTable::var_idx(const std::string & name) const {
+    for (auto i = names.rbegin(); i != names.rend(); i++) {
+        auto f = i->find(name);
+        if (f != i->end())
+            return f->second;
+    }
+    return -1;
+}
+
+std::string SymbolTable::var_name(const std::string & name) const {
+    if (is_global(name))
+        return "__" + name;
+    return std::to_string(4 * var_idx(name)) + "($fp)";
+}
+
+void SymbolTable::clear() {
+    whiles = 0;
+    abs_whiles = 0;
+    ifs = 0;
+    decvar.clear();
+    decfunc.clear();
+}
+
+int SymbolTable::n_local_vars(const std::string & name) {
+    return locals[name];
 }
 
 bool SymbolTable::can_be_expr(const std::string & name) const {
