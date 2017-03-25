@@ -98,7 +98,7 @@ int SymbolTable::var_idx(const std::string & name) const {
 
 std::string SymbolTable::var_name(const std::string & name) const {
     if (is_global(name))
-        return name;
+        return "__" + name;
     return std::to_string(-4 * var_idx(name)) + "($fp)";
 }
 

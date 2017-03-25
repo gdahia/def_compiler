@@ -17,8 +17,9 @@ void Program::codegen(std::ostream & os, SymbolTable & table) {
     os << ".data" << std::endl;
     for (auto i = instr->rbegin(); i != instr->rend(); i++)
         if (DecVar * decvar = dynamic_cast<DecVar *>(i->get()))
-            os << decvar->get_name() << ": .word" << std::endl;
+            os << "__" << decvar->get_name() << ": .word 0" << std::endl;
     
+    // start code
     os << std::endl << ".text" << std::endl;
     
     // implement print function
@@ -73,7 +74,7 @@ void Block::codegen(std::ostream & os, SymbolTable & table) {
 
 void Assign::codegen(std::ostream & os, SymbolTable & table) {
     rhs->codegen(os, table);
-    
+    os << "sw $a0, " << table.var_name(*lhs) << std::endl;
 }
 
 void If::codegen(std::ostream & os, SymbolTable & table) {
@@ -145,6 +146,8 @@ void DecVar::codegen(std::ostream & os, SymbolTable & table) {
         rhs->codegen(os, table);
         os << "sw $a0, " << table.var_name(*name) << std::endl;
     }
+    else
+        os << "sw $0, " << table.var_name(*name) << std::endl;
 }
 
 void DecFunc::codegen(std::ostream & os, SymbolTable & table) {
