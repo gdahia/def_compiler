@@ -270,13 +270,15 @@ void Geq::codegen(std::ostream & os, SymbolTable & table) {
 
 void Eq::codegen(std::ostream & os, SymbolTable & table) {
     BinOp::codegen(os, table);
+    os << "sub $a0, $t1, $a0" << std::endl;
     os << "sltu $a0, $0, $a0" << std::endl;
+    os << "xori $a0, $a0, 1" << std::endl;
 }
 
 void Diff::codegen(std::ostream & os, SymbolTable & table) {
     BinOp::codegen(os, table);
     os << "sub $a0, $t1, $a0" << std::endl;
-    os << "movn $a0, $0, $a0" << std::endl;
+    os << "sltu $a0, $0, $a0" << std::endl;
 }
 
 void Number::codegen(std::ostream & os, SymbolTable & table) {
