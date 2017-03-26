@@ -1,6 +1,0 @@
-def int main() {
-    int a = 3;
-    if (a?) {
-        return 1;
-    }
-}

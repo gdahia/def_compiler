@@ -1,7 +1,0 @@
-def int main() {
-    while (1) {
-        def int f() {
-            return 1;
-        }
-    }
-}

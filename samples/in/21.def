@@ -1,7 +1,0 @@
-def int erro(int a, int b, void c) {
-    return -1;
-}
-
-def int main() {
-    erro(1, 2, 3);
-}

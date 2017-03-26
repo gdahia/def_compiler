@@ -1,4 +1,0 @@
-def int fault() {
-    int a = 3;
-    print(a);
-}

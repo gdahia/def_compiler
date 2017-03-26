@@ -1,9 +1,0 @@
-def int f() {
-    int f = 1;
-    return f;
-}
-
-def int main() {
-    f();
-    int a;
-}
