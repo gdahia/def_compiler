@@ -30,7 +30,7 @@ void SymbolTable::add_scope() {
 
 void SymbolTable::add_while() {
     whiles++;
-    abs_whiles++;
+    while_idx.push_back(abs_whiles++);
 }
 
 void SymbolTable::add_if() {
@@ -38,7 +38,7 @@ void SymbolTable::add_if() {
 }
 
 unsigned int SymbolTable::get_current_while() const {
-    return abs_whiles;
+    return while_idx.back();
 }
 
 unsigned int SymbolTable::get_current_if() const {
@@ -47,6 +47,7 @@ unsigned int SymbolTable::get_current_if() const {
 
 void SymbolTable::pop_while() {
     whiles--;
+    while_idx.pop_back();
 }
 
 bool SymbolTable::inside_while() const {

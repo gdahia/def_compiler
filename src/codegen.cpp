@@ -149,6 +149,8 @@ void While::codegen(std::ostream & os, SymbolTable & table) {
     
     // end while
     os << "_end_while_" << label << ":" << std::endl;
+    
+    table.pop_while();
 }
 
 void DecVar::codegen(std::ostream & os, SymbolTable & table) {
