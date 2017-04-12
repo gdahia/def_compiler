@@ -1,2 +1,2 @@
-# Compilador Linguagem Def
-Compilador para Linguagem Def feito para disciplina MATA61 na Universidade Federal da Bahia.
+# Def Language Compiler
+Simple Def Language compiler made for MATA61 course at Universidade Federal da Bahia.
